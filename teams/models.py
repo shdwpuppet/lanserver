@@ -13,11 +13,11 @@ class Team(models.Model):
 class PlayerManager(models.Manager):
     use_for_related_fields = True
     
-    def add_player(self, user, team):
+    def add_player(self, user, team, position):
         if Team.objects.filter(players__username=user.username):
             pass
         else:
-            Player.objects.create(user=user, team=team)
+            Player.objects.create(user=user, team=team, position=position)
         
     def remove_player(self, user, team):
         player = Player.objects.get(username=user)
