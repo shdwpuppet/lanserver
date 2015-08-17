@@ -15,7 +15,7 @@ class Tournament(models.Model):
     )
     name = models.CharField(max_length = 64)
     description = models.TextField()
-    t_type = models.IntegerField(choices=TYPE_CHOICES)
+    t_type = models.IntegerField(choices=TYPE_CHOICES, default=RR_DE)
    
     def create_div(self, visible=False):
         Division.objects.create(tournament=self, is_visible=visible) 
@@ -50,7 +50,7 @@ class Match(models.Model):
     division = models.ForeignKey('Division')
     home_team = models.ForeignKey('teams.Team', related_name='home_team')
     away_team = models.ForeignKey('teams.Team', related_name='away_team')
-    gmap = models.CharField(max_length = 64)
+    gmap = models.CharField(max_length = 64, default='cp_snakewater')
     #winning side is gotten by finding difference in scores
     home_score = models.IntegerField()
     away_score = models.IntegerField()
