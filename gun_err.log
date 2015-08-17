@@ -1,0 +1,235 @@
+[2015-07-14 18:40:31 +0000] [3759] [INFO] Starting gunicorn 19.3.0
+[2015-07-14 18:40:31 +0000] [3759] [INFO] Listening at: unix:/home/pi/lanserver/run/gunicorn.sock (3759)
+[2015-07-14 18:40:31 +0000] [3759] [INFO] Using worker: sync
+[2015-07-14 18:40:31 +0000] [3770] [INFO] Booting worker with pid: 3770
+[2015-07-14 18:40:31 +0000] [3771] [INFO] Booting worker with pid: 3771
+[2015-07-14 18:40:31 +0000] [3772] [INFO] Booting worker with pid: 3772
+[2015-07-14 18:40:31 +0000] [3773] [INFO] Booting worker with pid: 3773
+[2015-07-14 18:40:31 +0000] [3774] [INFO] Booting worker with pid: 3774
+[2015-07-14 18:40:31 +0000] [3775] [INFO] Booting worker with pid: 3775
+[2015-07-14 18:40:38 +0000] [3772] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named csrf.middleware
+[2015-07-14 18:41:55 +0000] [3772] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named csrf.middleware
+[2015-07-14 18:49:43 +0000] [3759] [INFO] Handling signal: term
+[2015-07-14 18:49:43 +0000] [3770] [INFO] Worker exiting (pid: 3770)
+[2015-07-14 18:49:43 +0000] [3771] [INFO] Worker exiting (pid: 3771)
+[2015-07-14 18:49:43 +0000] [3772] [INFO] Worker exiting (pid: 3772)
+[2015-07-14 18:49:43 +0000] [3773] [INFO] Worker exiting (pid: 3773)
+[2015-07-14 18:49:43 +0000] [3774] [INFO] Worker exiting (pid: 3774)
+[2015-07-14 18:49:43 +0000] [3775] [INFO] Worker exiting (pid: 3775)
+[2015-07-14 18:49:43 +0000] [3759] [INFO] Shutting down: Master
+[2015-07-14 18:49:45 +0000] [3840] [INFO] Starting gunicorn 19.3.0
+[2015-07-14 18:49:45 +0000] [3840] [INFO] Listening at: unix:/home/pi/lanserver/run/gunicorn.sock (3840)
+[2015-07-14 18:49:45 +0000] [3840] [INFO] Using worker: sync
+[2015-07-14 18:49:45 +0000] [3851] [INFO] Booting worker with pid: 3851
+[2015-07-14 18:49:45 +0000] [3852] [INFO] Booting worker with pid: 3852
+[2015-07-14 18:49:45 +0000] [3853] [INFO] Booting worker with pid: 3853
+[2015-07-14 18:49:45 +0000] [3854] [INFO] Booting worker with pid: 3854
+[2015-07-14 18:49:45 +0000] [3855] [INFO] Booting worker with pid: 3855
+[2015-07-14 18:49:45 +0000] [3856] [INFO] Booting worker with pid: 3856
+[2015-07-14 18:49:52 +0000] [3851] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named middleware.csrf
+[2015-07-14 18:49:56 +0000] [3854] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named middleware.csrf
+[2015-07-14 18:50:45 +0000] [3854] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named middleware.csrf
+[2015-07-14 18:51:30 +0000] [3840] [INFO] Handling signal: term
+[2015-07-14 18:51:30 +0000] [3852] [INFO] Worker exiting (pid: 3852)
+[2015-07-14 18:51:30 +0000] [3855] [INFO] Worker exiting (pid: 3855)
+[2015-07-14 18:51:30 +0000] [3853] [INFO] Worker exiting (pid: 3853)
+[2015-07-14 18:51:30 +0000] [3856] [INFO] Worker exiting (pid: 3856)
+[2015-07-14 18:51:30 +0000] [3854] [INFO] Worker exiting (pid: 3854)
+[2015-07-14 18:51:30 +0000] [3851] [INFO] Worker exiting (pid: 3851)
+[2015-07-14 18:51:30 +0000] [3840] [INFO] Shutting down: Master
+[2015-07-14 18:51:32 +0000] [3904] [INFO] Starting gunicorn 19.3.0
+[2015-07-14 18:51:32 +0000] [3904] [INFO] Listening at: unix:/home/pi/lanserver/run/gunicorn.sock (3904)
+[2015-07-14 18:51:32 +0000] [3904] [INFO] Using worker: sync
+[2015-07-14 18:51:32 +0000] [3915] [INFO] Booting worker with pid: 3915
+[2015-07-14 18:51:32 +0000] [3916] [INFO] Booting worker with pid: 3916
+[2015-07-14 18:51:32 +0000] [3917] [INFO] Booting worker with pid: 3917
+[2015-07-14 18:51:32 +0000] [3918] [INFO] Booting worker with pid: 3918
+[2015-07-14 18:51:32 +0000] [3919] [INFO] Booting worker with pid: 3919
+[2015-07-14 18:51:32 +0000] [3920] [INFO] Booting worker with pid: 3920
+[2015-07-14 18:51:50 +0000] [3915] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named middleware.csrf
+[2015-07-14 18:52:52 +0000] [3904] [INFO] Handling signal: term
+[2015-07-14 18:52:52 +0000] [3920] [INFO] Worker exiting (pid: 3920)
+[2015-07-14 18:52:52 +0000] [3916] [INFO] Worker exiting (pid: 3916)
+[2015-07-14 18:52:52 +0000] [3917] [INFO] Worker exiting (pid: 3917)
+[2015-07-14 18:52:52 +0000] [3919] [INFO] Worker exiting (pid: 3919)
+[2015-07-14 18:52:52 +0000] [3918] [INFO] Worker exiting (pid: 3918)
+[2015-07-14 18:52:52 +0000] [3915] [INFO] Worker exiting (pid: 3915)
+[2015-07-14 18:52:53 +0000] [3904] [INFO] Shutting down: Master
+[2015-07-14 18:52:54 +0000] [3952] [INFO] Starting gunicorn 19.3.0
+[2015-07-14 18:52:54 +0000] [3952] [INFO] Listening at: unix:/home/pi/lanserver/run/gunicorn.sock (3952)
+[2015-07-14 18:52:54 +0000] [3952] [INFO] Using worker: sync
+[2015-07-14 18:52:54 +0000] [3963] [INFO] Booting worker with pid: 3963
+[2015-07-14 18:52:54 +0000] [3964] [INFO] Booting worker with pid: 3964
+[2015-07-14 18:52:54 +0000] [3965] [INFO] Booting worker with pid: 3965
+[2015-07-14 18:52:54 +0000] [3966] [INFO] Booting worker with pid: 3966
+[2015-07-14 18:52:54 +0000] [3967] [INFO] Booting worker with pid: 3967
+[2015-07-14 18:52:54 +0000] [3968] [INFO] Booting worker with pid: 3968
+[2015-07-14 18:53:06 +0000] [3965] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named middleware.csrf
+[2015-07-14 18:57:25 +0000] [3963] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named middleware.csrf
+[2015-07-14 18:57:36 +0000] [3952] [INFO] Handling signal: term
+[2015-07-14 18:57:36 +0000] [3968] [INFO] Worker exiting (pid: 3968)
+[2015-07-14 18:57:36 +0000] [3963] [INFO] Worker exiting (pid: 3963)
+[2015-07-14 18:57:36 +0000] [3967] [INFO] Worker exiting (pid: 3967)
+[2015-07-14 18:57:36 +0000] [3965] [INFO] Worker exiting (pid: 3965)
+[2015-07-14 18:57:36 +0000] [3964] [INFO] Worker exiting (pid: 3964)
+[2015-07-14 18:57:36 +0000] [3966] [INFO] Worker exiting (pid: 3966)
+[2015-07-14 18:57:36 +0000] [3952] [INFO] Shutting down: Master
+[2015-07-14 18:57:38 +0000] [4060] [INFO] Starting gunicorn 19.3.0
+[2015-07-14 18:57:38 +0000] [4060] [INFO] Listening at: unix:/home/pi/lanserver/run/gunicorn.sock (4060)
+[2015-07-14 18:57:38 +0000] [4060] [INFO] Using worker: sync
+[2015-07-14 18:57:38 +0000] [4071] [INFO] Booting worker with pid: 4071
+[2015-07-14 18:57:38 +0000] [4072] [INFO] Booting worker with pid: 4072
+[2015-07-14 18:57:38 +0000] [4073] [INFO] Booting worker with pid: 4073
+[2015-07-14 18:57:38 +0000] [4074] [INFO] Booting worker with pid: 4074
+[2015-07-14 18:57:38 +0000] [4075] [INFO] Booting worker with pid: 4075
+[2015-07-14 18:57:38 +0000] [4076] [INFO] Booting worker with pid: 4076
+[2015-07-14 18:57:43 +0000] [4072] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named middleware.csrf
+[2015-07-14 18:59:13 +0000] [4072] [ERROR] Error handling request
+Traceback (most recent call last):
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 130, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 171, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/wsgi.py", line 170, in __call__
+    self.load_middleware()
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 50, in load_middleware
+    mw_class = import_string(middleware_path)
+  File "/home/pi/lanserver/local/lib/python2.7/site-packages/django/utils/module_loading.py", line 26, in import_string
+    module = import_module(module_path)
+  File "/usr/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+ImportError: No module named middleware.csrf
+[2015-07-14 19:01:59 +0000] [4060] [INFO] Handling signal: term
+[2015-07-14 19:01:59 +0000] [4072] [INFO] Worker exiting (pid: 4072)
+[2015-07-14 19:01:59 +0000] [4071] [INFO] Worker exiting (pid: 4071)
+[2015-07-14 19:01:59 +0000] [4073] [INFO] Worker exiting (pid: 4073)
+[2015-07-14 19:01:59 +0000] [4074] [INFO] Worker exiting (pid: 4074)
+[2015-07-14 19:01:59 +0000] [4075] [INFO] Worker exiting (pid: 4075)
+[2015-07-14 19:01:59 +0000] [4076] [INFO] Worker exiting (pid: 4076)
+[2015-07-14 19:01:59 +0000] [4060] [INFO] Shutting down: Master

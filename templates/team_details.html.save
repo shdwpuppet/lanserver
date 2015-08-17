@@ -1,0 +1,10 @@
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<h1>{{team.name}}<h1>
+<ul>
+{% for player in team.players.all %}
+    <li>{{ player.username }}</li>
+{% endfor %}
+</ul>

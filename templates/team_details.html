@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title%}{{team.name}}{% endblock %}
+{% block primary %}
+<ul>
+{% for player in team.players.all %}
+    <li>{{ player.username }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

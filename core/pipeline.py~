@@ -1,0 +1,7 @@
+from social.pipeline.partial import partial
+
+def pick_username(backend, details, response, is_new=False, *args, **kwargs):
+    if is_new:
+        pass
+    pass
+    
