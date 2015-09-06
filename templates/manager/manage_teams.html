@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block primary %}
+	<ul class="list-group">
+	<div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Teams</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                      	<th>ID</th>
+                        <th>Team Name</th>
+                        <th>Players</th>
+                        <th>Platform(s)</th>
+                        <th>Engine version</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for team in teams %}
+                      <tr>
+                      	<td>{{ team.id }}</td>
+                        <td><a href="/teams/{{ team.id }}">{{ team.name }}</a></td>
+                        <td>{% for player in team.players.all %}{{ player.username }}{% endfor %}</td>
+                        <td>Win 95+</td>
+                        <td> 4</td>
+                        <td><div class="btn-group">
+                      <button type="button" class="btn btn-danger">Action</button>
+                      <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a class = "delete" href="{% url 'delete_team' pk=team.pk %}">Delete</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                      </ul>
+                    </div></td>
+                      </tr>
+                    {% endfor %}
+					</tbody>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+	</ul>
+{% endblock %}

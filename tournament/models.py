@@ -1,96 +1,137 @@
 from django.db import models
+from teams.models import Team
+from django.db.models import Count
+from django.utils.text import slugify
 
-# Create your models here.
+
 
 class Tournament(models.Model):
-    RR_DE = 1
-    RR_SE = 2
-    LG_DE = 3
-    LG_SE = 4
-    TYPE_CHOICES = (
-        (RR_DE, 'Round Robin with Double Elimination Finals'),
-        (RR_SE, 'Round Robin with Single Elimination'),
-        (LG_DE, 'League with Double Elimination Finals'),
-        (LG_SE, 'League with Single Elimination'),
+    # TODO: Define fields here
+    ROSTERS_OPEN = 1
+    ROSTERS_LOCKED = 2
+    ENDED = 3
+    HIDDEN = 4
+    STATUS =(
+        (ROSTERS_OPEN, 'Rosters Open'),
+        (ROSTERS_LOCKED, 'Rosters Locked'),
+        (ENDED, 'Ended'),
+        (HIDDEN, 'Hidden'),
     )
-    name = models.CharField(max_length = 64)
+    name = models.CharField(max_length=50)
+    slug = models.SlugField()
+    location = models.CharField(max_length=200)
     description = models.TextField()
-    t_type = models.IntegerField(choices=TYPE_CHOICES, default=RR_DE)
-   
-    def create_div(self, visible=False):
-        Division.objects.create(tournament=self, is_visible=visible) 
-    
-    def add_team(team, division=None):
-        pass #chooses a division to add them to depending on type of tournament
-    
-    def start_finals():
-        pass #finalizes the brackets, adds the top x teams from each division
+    game = models.TextField(max_length=50)
+    date_start = models.DateTimeField()
+    date_end = models.DateTimeField()
+    status = models.IntegerField(choices=STATUS, default='1')
+
+    class Meta:
+        verbose_name = "Tournamentst"
+        verbose_name_plural = "Tournaments"
+
+    def __str__(self):
+        return self.name
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('')
+
+    # TODO: Define custom methods here
+
+    def signup(self, team, requested_div):
+        Signup.objects.create(team=team, tournament=self, requested_div=requested_div)
+
+    def add_division(self, dtype, name, num_finalists):
+        slug = slugify(name)
+        d = Division.objects.create(div_type=dtype, name=name, slug=slug, tournament=self, num_finalists=num_finalists)
+        d.save()
+
+
 class Division(models.Model):
-    tournament = models.ForeignKey('Tournament')
-    #div_type = round robin, 
-    is_visible = models.BooleanField() #is it to be shown yet in the public facing areas
-    teams = models.ManyToManyField('teams.Team')
-    
-class Record(models.Model):
-    division = models.ForeignKey('Division')
-    team = models.ForeignKey('teams.Team')
-    win = models.IntegerField()
-    loss = models.IntegerField()
-    tie = models.IntegerField()
-    rf = models.IntegerField()
-    ra = models.IntegerField()
-    difficulty_of_schedule = models.DecimalField(max_digits=5, decimal_places=3)
+
+    TYPES = (
+        (1, 'RR'),
+        (2, 'LEAGUE'),
+    )
+    div_type = models.IntegerField(choices=TYPES, default='1')
+    name = models.CharField(max_length=50)
+    slug = models.SlugField()
+    tournament = models.ForeignKey(Tournament)
+    num_finalists = models.IntegerField(default=2) # number of teams that move from group stage to brackets
+
+    def get_assignable_groups(self):
+        return Group.objects.all().annotate(teams_count=Count('teams')).order_by('-teams_count').filter(division=self).filter(inc_in_assignment=True).reverse()
+
+    def assign_team_to_group(self, team, group=None):
+        if group is None:
+            group = self.get_assignable_groups()[0]
+            group.teams.add(team)
+        else:
+            group.teams.add(team)
+        group.max_round = group.teams.count() - 1
+
+    def remove_team_from_group(self, team, group):
+        group.teams.remove(team)
+        group.save()
+    def move_up(self):
+        for group in self.group_set.all():
+            pass
+
+    def join(self, team):
+        pass
+
+    def create_group(self, name, inc_in_assignment):
+        group = Group()
+        group.name = name
+        group.inc_in_assignment = inc_in_assignment
+        group.division = self
+        group.current_round = 0
+        group.max_round = 0
+        group.save()
+
+    class Meta:
+        verbose_name = "Division"
+        verbose_name_plural = "Divisions"
+
+    def __str__(self):
+        return self.name
+
+
+class Signup(models.Model):
+    team = models.ForeignKey(Team)
+    tournament = models.ForeignKey(Tournament)
+    requested_div = models.ForeignKey(Division)
+
+    class Meta:
+        unique_together = ('team', 'tournament')
+
+
+class Group(models.Model):
+    division = models.ForeignKey(Division)
+    name = models.CharField(max_length=50)
+    teams = models.ManyToManyField(Team)
+    # should this group be included in the automatic inc_in_assignment
+    inc_in_assignment = models.BooleanField()
+    current_round = models.IntegerField()
+    max_round = models.IntegerField()
+    is_finished = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+
+class Bracket(models.Model):
+    division = models.OneToOneField(Division)
+
+
+class Seed(models.Model):
+    bracket = models.ForeignKey(Bracket)
+    team = models.ForeignKey(Team)
+    seed = models.IntegerField()
+
+
+class Rank(models.Model):
+    team = models.ForeignKey(Team)
     rank = models.IntegerField()
-    
-    def recalculate_dos():
-        #recalculate the difficulty of schedule
-        pass
-        
-class Match(models.Model):
-    division = models.ForeignKey('Division')
-    home_team = models.ForeignKey('teams.Team', related_name='home_team')
-    away_team = models.ForeignKey('teams.Team', related_name='away_team')
-    gmap = models.CharField(max_length = 64, default='cp_snakewater')
-    #winning side is gotten by finding difference in scores
-    home_score = models.IntegerField()
-    away_score = models.IntegerField()
-    is_bye = models.BooleanField()
-    #status = choice between status fields. The controller will hook into this database table and lookup pending statuses to set up the server with
-
-    def create_match(home, away, is_bye, div):
-      pass  
-
-    def get_winner():
-        pass
-        #return the winner, decided by comparing homse score vs away score
-        if not is_bye:
-            if home_score > away_score:
-                return 'home'
-            elif away_score > home_score:
-                return 'away'
-            elif away_score == home_score:
-                return 'tie'
-                
-    def record_match(self):
-        hr = Record.objects.filter(team = home_team).filter(division = self.division)
-        ar = Record.objects.filter(team = home_team).filter(division = self.division)
-        
-        hr.rf = hr.rf + home_score
-        ar.rf = ar.rf + away_score        
-        hr.ra = hr.ra + away_score
-        ar.ra = ar.ra + home_score
-        
-        if get_winner() == 'home':
-            hr.win = hr.win +1
-            ar.loss = ar.loss +1
-        elif get_winner() == 'away':
-            ar.win = ar.win +1
-            hr.loss = hr.loss +1
-        elif get_winner() == 'tie':
-            hr.tie = hr.tie + 1
-            ar.tie = ar.tie + 1
-        
-    def change_record():
-        pass
-        #calculate the difference in scores, then add that difference into the scores
-        
+    group = models.ForeignKey(Group)

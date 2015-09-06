@@ -1,8 +1,67 @@
 {% extends "base.html" %}
+{% block title %}
+Create New Team
+{% endblock title %}
 {% block primary %}
-<h1>New Team</h1>
-    <form method="POST">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
+<div class="row">
+            {% if messages %}
+            {% for msg in messages %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Alert!</h4>{{msg.message}}
+                </div>
+            {% endfor %}
+            {% endif %}
+                <div class="alert alert-info alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-info"></i> Info!</h4> When you create a team, you will automatically become captain and can sign up for tournaments immediately!
+                </div>
+
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="box box-primary">
+        <div class="box-body">
+        <form method="POST"> 
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.errors %}
+                <div class="form-group has-error">
+                      <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{% for error in field.errors %}{{ error }}{% endfor %}</label>
+                      {{ field }}
+                </div>
+            {% else %}
+            <div class="form-group">
+                {{ field.label_tag }} {{ field }}
+            </div>
+            {% endif %}
+        {% endfor %}
+            <button type="submit" class="save btn btn-default">Create Your Team</button>
+        </form>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <i class="fa fa-info-circle"></i>
+                <h3 class="box-title">Team Rules</h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <dl>
+                    <dt>General Rules</dt>
+                    <dd>In general, you are safe if your team name and description pass the "Don't Be An Asshole" test.</dd>
+                    <dt>Names</dt>
+                    <dd>Creative and funny names are allowed and encouraged. However, blatant racism, specific bullying or extreme hateful language is not allowed.</dd>
+                    <dt>Descriptions</dt>
+                    <dd>Same rules as names. This is a good place to list your roster and their position, tell a little team history, brag about your accomplishments or post some dank memes. This is not the place for bullying, racism or other non-tasteful hateful or otherwise unacceptable content.</dd>
+                    <dt>Team Website</dt>
+                    <dd>Actually, we dont care if its your team's website, a link to a steam group or an ode to your waifu. Just nothing NSFW/NSFL, no illegal material, and again, no bullying.</dd>
+                    <dt>Final Word</dt>
+                    <dd>Final say of course, goes to the admins and other staff of League.TF. Just play nice with others and there won't be any problems!</dd>
+                </dl>
+            </div><!-- /.box-body -->
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block primary %}
+<div class="box">
+	<div class="box-header">
+		<h3 class="box-title">{{ tournament.name }}</h3>
+		<div class="box-tools">
+			<form method='POST'>
+				{% csrf_token %}
+				<div class="input-group" style="width: 300px;">
+					<input type="text" name="name" class="form-control input-sm pull-right" placeholder="New Division Name">
+					<div class="input-group-btn">
+						<button class="btn btn-sm btn-flat btn-info" name="add_div">Add Division</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	{% for div in tournament.division_set.all %}
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">{{ div.name }}</h3>
+		</div><!-- /.box-header -->
+		<div class="box-body">
+			<div class="row">
+				<div class="col-md-6">
+					{% for group in div.group_set.all %}
+					{% if not forloop.counter|divisibleby:"2" %}
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">{{ group.name }}</h3>
+							<div class='box-tools'>
+								<form method='POST'>
+									{% csrf_token %}
+									<input type="hidden" name="group" value="{{ group.pk }}">
+									<div class="input-group" style='width: 200px;'>
+										<select name="team_added" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1">
+											{% for signup in tournament.signup_set.all%}
+											<option>{{ signup.team.name }}</option>
+											{% endfor %}
+										</select>
+										<div class="input-group-btn">
+											<button class="btn btn-sm btn-flat btn-info" name="add_team_group">Add Team to Division</button>
+										</div>
+									</div>
+
+								</form>
+							</div>
+						</div><!-- /.box-header -->
+						<div class="box-body no-padding">
+							<table class="table table-condensed">
+								<tbody>
+									<tr>
+										<th style="width: 10px">#</th>
+										<th>Team Name</th>
+										<th>Record</th>
+										<th style="width: 40px">Label</th>
+									</tr>
+									{% for team in group.teams.all %}
+									<tr>
+										<td>1.</td>
+										<td>{{team.name}}</td>
+										<td>2-4</td>
+										<td><form method="post"><input type='hidden' name='team' value='{{ team.pk }}'><input type="hidden" name="group" value="{{ group.pk }}">{% csrf_token %}<button class="btn btn-block btn-danger btn-xs" name="remove_team_group">Remove</button></form></td>
+									</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div><!-- /.box-body -->
+						<div class="box-footer">
+							The footer of the box
+						</div>
+					</div><!-- /.box -->
+					{% endif %}
+					{% endfor %}
+				</div>
+				<div class="col-md-6">
+					{% for group in div.group_set.all %}
+					{% if forloop.counter|divisibleby:"2" %}
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">{{ group.name }}</h3>
+						</div><!-- /.box-header -->
+						<div class="box-body no-padding">
+							<table class="table table-condensed">
+								<tbody>
+									<tr>
+										<th style="width: 10px">#</th>
+										<th>Team Name</th>
+										<th>Record</th>
+										<th style="width: 40px">Label</th>
+									</tr>
+									{% for team in group.teams.all %}
+									<tr>
+										<td>1.</td>
+										<td>{{team.name}}</td>
+										<td>2-4</td>
+										<td><span class="badge bg-red">55%</span></td>
+									</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div><!-- /.box-body -->
+					</div>
+					{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		</div><!-- /.box-body -->
+	</div><!-- /.box -->
+	{% endfor %}
+</div>
+</div>
+{% endblock %}

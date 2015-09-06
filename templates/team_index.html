@@ -1,10 +1,36 @@
 {% extends 'base.html' %}
 {% block primary %}
 {% if team_list %}
-	<ul>
-		{% for team in team_list %}
-			<li><a href="/teams/{{ team.id }}/">{{team.name}}</a></li>
-		{% endfor %}
+	<ul class="list-group">
+	<div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Teams</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>Team Name</th>
+                        <th>Players</th>
+                        <th>Platform(s)</th>
+                        <th>Engine version</th>
+                        <th>CSS grade</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for team in team_list %}
+                      <tr>
+                        <td><a href="/teams/{{ team.id }}">{{ team.name }}</a></td>
+                        <td>{{ team.player_count }}</td>
+                        <td>Win 95+</td>
+                        <td> 4</td>
+                        <td>X</td>
+                      </tr>
+                    {% endfor %}
+					</tbody>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
 	</ul>
 	{% else %}
 		<p>No Teams have been made</p>
