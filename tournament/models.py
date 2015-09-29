@@ -4,9 +4,7 @@ from django.db.models import Count
 from django.utils.text import slugify
 
 
-
 class Tournament(models.Model):
-    # TODO: Define fields here
     ROSTERS_OPEN = 1
     ROSTERS_LOCKED = 2
     ENDED = 3
@@ -27,7 +25,7 @@ class Tournament(models.Model):
     status = models.IntegerField(choices=STATUS, default='1')
 
     class Meta:
-        verbose_name = "Tournamentst"
+        verbose_name = "Tournaments"
         verbose_name_plural = "Tournaments"
 
     def __str__(self):
@@ -59,6 +57,7 @@ class Division(models.Model):
     slug = models.SlugField()
     tournament = models.ForeignKey(Tournament)
     num_finalists = models.IntegerField(default=2) # number of teams that move from group stage to brackets
+    is_open = models.BooleanField(default=True)
 
     def get_assignable_groups(self):
         return Group.objects.all().annotate(teams_count=Count('teams')).order_by('-teams_count').filter(division=self).filter(inc_in_assignment=True).reverse()
@@ -74,6 +73,7 @@ class Division(models.Model):
     def remove_team_from_group(self, team, group):
         group.teams.remove(team)
         group.save()
+
     def move_up(self):
         for group in self.group_set.all():
             pass
@@ -102,6 +102,7 @@ class Signup(models.Model):
     team = models.ForeignKey(Team)
     tournament = models.ForeignKey(Tournament)
     requested_div = models.ForeignKey(Division)
+    is_completed = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('team', 'tournament')

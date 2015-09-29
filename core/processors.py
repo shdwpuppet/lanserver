@@ -11,7 +11,10 @@ def avatar(request):
             user = request.user
             steam_id = user.social_auth.get().uid
             key = settings.SOCIAL_AUTH_STEAM_API_KEY
-            obj = urllib.request.urlopen("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}".format(key, steam_id)).read().decode()
+            try:
+                obj = urllib.request.urlopen("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}".format(key, steam_id)).read().decode()
+            except:
+                return {}
             json_obj = json.loads(obj)
             return {
                 'avatar':   json_obj['response']['players'][0]['avatarfull'],
@@ -34,4 +37,7 @@ def user_team(request):
 
 
 def tournaments(request):
-    tournaments = Tournament.objects.get(is_active=True)
+    context = dict()
+    context['tournaments'] = Tournament.objects.all().exclude(status=3).exclude(status=4)
+    return context
+

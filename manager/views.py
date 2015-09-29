@@ -5,16 +5,16 @@ from django.core.urlresolvers import reverse_lazy
 from teams.models import Team
 from tournament.models import Tournament, Division, Group, Signup
 from tournament.forms import TournamentForm
-from django.contrib.admin.views.decorators import staff_member_required
+from .decorators import staff_member_required
 import datetime
 
-
+@staff_member_required
 class TeamDelete(DeleteView):
     model = Team
     success_url = reverse_lazy('team_manager')
     template_name = 'manager/confirm_delete.html'
 
-
+@staff_member_required
 class TournamentDelete(DeleteView):
     model = Tournament
     success_url = reverse_lazy('tournament_manager')
@@ -65,6 +65,22 @@ def tournamentManager(request, id=None):
             'date_end': date_end,
         }
     return render(request, 'manager/manage_tournaments.html', context)
+
+@staff_member_required
+def add_team_to_div_group(request, team_pk, tournament_pk, division_pk, group_pk=None):
+    division = Division.objects.get(pk=division_pk)
+    team = Team.objects.get(pk=team_pk)
+    if group_pk:
+        group = Group.objects.get(pk=group_pk)
+    else:
+        group = None
+        print("group matched to none")
+    division.assign_team_to_group(team, group=group)
+    tournament = Tournament.objects.get(pk=tournament_pk)
+    for signup in tournament.signup_set.filter(team=team):
+        signup.is_completed = True
+        signup.save()
+    return render(request, 'manager/manage_tournament_divs.html', {'tournament': tournament})
 
 
 @staff_member_required

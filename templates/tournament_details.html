@@ -22,6 +22,22 @@
                         <b>Prize Pool:</b> <span class="pull-right">$15000</span>
                     </li>
                 </ul>
+                {% if eligible %}
+                <form method="post">
+                    {% csrf_token %}
+                <p class="margin">Choose a division to sign up for. Note, some divisions may require admin approval</p>
+                <div class="input-group">
+                        <select class="form-control" name="signup">
+                            {% for div in tournament.division_set.all %}
+                                <option>{{ div.name }}</option>
+                            {% endfor %}
+                        </select>
+                    <div class="input-group-btn">
+                      <button type="submit" class="btn btn-primary">Sign Up</button>
+                    </div>
+                    </div>
+                </form>
+                {% endif %}
             </div><!-- /.box-body -->
             </div><!-- /.box -->
             </div>

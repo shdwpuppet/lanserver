@@ -21,11 +21,22 @@ def index(request):
 
 def details(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
-    return render(request, 'team_details.html', {'team': team})
+    context = {'team': team}
+    if request.user.is_authenticated() and request.user.player_set.get() in team.get_captains():
+        context.update({'is_captain': True})
+        if request.method == 'POST':
+            if 'save_changes' in request.POST:
+                form = TeamForm(request.POST, instance=team)
+                if form.is_valid():
+                    form.save()
+                    return redirect('teams.views.details', team_id=team_id)
+            elif 'change_captain' in request.POST:
+                team.change_captain(Player.objects.get(name=request.POST.get('new_captain')))
+                return redirect('teams.views.details', team_id=team_id)
+        else:
+            context.update({'form': TeamForm(instance=team)})
+    return render(request, 'team_details.html', context)
 
-
-def manage(request, team_id):
-    pass
 
 
 @login_required(login_url="/login/steam/")

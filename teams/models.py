@@ -11,9 +11,14 @@ class Team(models.Model):
     description = models.TextField()
     website = models.CharField(max_length=240)
 
-
     def get_captains(self):
         return Player.objects.filter(team=self, position=1)
+
+    def change_captain(self, new_captain):
+        for player in self.get_captains():
+            player.position = 3
+            player.save()
+        new_captain.position = 1
 
     def __str__(self):
         return self.name

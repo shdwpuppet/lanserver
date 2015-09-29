@@ -1,9 +1,66 @@
 {% extends 'base.html' %}
 {% block title%}{{team.name}}{% endblock %}
+{% block subtitle %}Team Details{% endblock %}
 {% block primary %}
-<ul>
-{% for player in team.players.all %}
-    <li>{{ player.username }}</li>
-{% endfor %}
-</ul>
+    <div class="row">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
+                <li><a href="#history" data-toggle="tab">Match History</a></li>
+                <li><a href="#stats" data-toggle="tab">Statistics</a></li>
+                {% if is_captain == True %}
+                    <li><a href="#edit" data-toggle="tab">Edit</a></li>
+                {% endif %}
+            </ul>
+            <div class="tab-content">
+                <div class="active tab-pane" id="profile">
+                </div>
+                <div class="tab-pane" id="history">
+                </div>
+                <div class="tab-pane" id="stats">
+                </div>
+                {% if is_captain == True %}
+                    <div class="tab-pane" id="edit">
+                        <div class="box">
+                            <div class="box-header">
+                                <h3 class="box-title">Edit Team Details</h3>
+                            </div>
+                            <form method="post">
+                                {% csrf_token %}
+                                {% for field in form %}
+                                    {% if field.errors %}
+                                        <div class="form-group has-error">
+                                            <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{% for error in field.errors %}{{ error }}{% endfor %}</label>
+                                            {{ field }}
+                                        </div>
+                                    {% else %}
+                                        <div class="form-group">
+                                            {{ field.label_tag }} {{ field }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                                <button type="submit" class="save btn btn-default" name="save_changes">Save Changes</button>
+                            </form>
+                        </div>
+                        <form method="post">
+                            <div class="box">
+                            <div class="box-header">
+                                <h3 class="box-title">Captain</h3>
+                            </div>
+                                <div class="form-group">
+                                    <label for="new_captain">New Captain</label>
+                                    <select class="form-control" name="new_captain">
+                                        {% for player in team.players.all %}
+                                            <option>{{ player }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="save btn btn-default" name="change_captain">Change Captain</button>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+        </div>
+    </div>
+    </div>
 {% endblock %}

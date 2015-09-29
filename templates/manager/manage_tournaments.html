@@ -1,85 +1,94 @@
 {% extends "base.html" %}
 {% block primary %}
-<div class="row">
-                <div class="col-md-8">
-                  <div class="box">
-                    <div class="box-header">
-                      <h3 class="box-title">Tournaments</h3>
-                    </div><!-- /.box-header -->
-                  <div class="box-body">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Tournaments</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
                     <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                      	<th>ID</th>
-                        <th>Tournament Name</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {% for tournament in tournaments %}
-                      <tr>
-                      	<td>{{ team.id }}</td>
-                        <td><a href="/tournaments/{{ tournament.slug }}">{{ tournament.name }}</a></td>
-                        <td>{{ tournament.location }}</td>
-                        <td>{{ tournament.get_status_display }}</td>
-                        <td><div class="btn-group">
-                      <button type="button" class="btn btn-danger">Action</button>
-                      <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                      </button>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a class = "delete" href="{% url 'delete_tournament' pk=tournament.pk %}">Delete</a></li>
-                        <li><a href="{% url 'edit_tournament' id=tournament.pk %}">Edit Tournament Details</a></li>
-                        <li><a href="{% url 'divgroup_tournament' pk=tournament.pk %}">Manage Divisions and Groups</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{% url 'set_status' pk=tournament.pk status=1 %}">Set Rosters Open</a></li>
-                        <li><a href="{% url 'set_status' pk=tournament.pk status=2 %}">Set Rosters Locked</a></li>
-                        <li><a href="{% url 'set_status' pk=tournament.pk status=3 %}">Set Tournament Ended</a></li>
-                        <li><a href="{% url 'set_status' pk=tournament.pk status=4 %}">Set Tournament Hidden</a></li>
-                      </ul>
-                    </div></td>
-                      </tr>
-                    {% endfor %}
-					</tbody>
-                  </table>
-                  </div>
-                  </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="box">
-                      <div class="box-header">
-                        <h3 class="box-title">Add Tournament</h3>
-                      </div><!-- /.box-header -->
-                      <div class="box-body">
-                        <form method="POST"> 
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tournament Name</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for tournament in tournaments %}
+                            <tr>
+                                <td>{{ team.id }}</td>
+                                <td><a href="/tournaments/{{ tournament.slug }}">{{ tournament.name }}</a></td>
+                                <td>{{ tournament.location }}</td>
+                                <td>{{ tournament.get_status_display }}</td>
+                                <td><div class="btn-group">
+                                    <button type="button" class="btn btn-danger">Action</button>
+                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a class = "delete" href="{% url 'delete_tournament' pk=tournament.pk %}">Delete</a></li>
+                                        <li><a href="{% url 'edit_tournament' id=tournament.pk %}">Edit Tournament Details</a></li>
+                                        <li><a href="{% url 'divgroup_tournament' pk=tournament.pk %}">Manage Divisions and Groups</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="{% url 'set_status' pk=tournament.pk status=1 %}">Set Rosters Open</a></li>
+                                        <li><a href="{% url 'set_status' pk=tournament.pk status=2 %}">Set Rosters Locked</a></li>
+                                        <li><a href="{% url 'set_status' pk=tournament.pk status=3 %}">Set Tournament Ended</a></li>
+                                        <li><a href="{% url 'set_status' pk=tournament.pk status=4 %}">Set Tournament Hidden</a></li>
+                                    </ul>
+                                </div></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Add Tournament</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <form method="POST">
                         {% csrf_token %}
                         {% for field in form %}
                             {% if field.errors %}
                                 <div class="form-group has-error">
-                                      <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{% for error in field.errors %}{{ error }}{% endfor %}</label>
-                                      {{ field }}
+                                    <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{% for error in field.errors %}{{ error }}{% endfor %}</label>
+                                    {{ field }}
                                 </div>
                             {% else %}
-                            <div class="form-group">
-                                {{ field.label_tag }} {{ field }}
-                            </div>
+                                <div class="form-group">
+                                    {{ field.label_tag }} {{ field }}
+                                </div>
                             {% endif %}
                         {% endfor %}
                         <div class="form-group">
-                        <label>Start and Stop Date and Time</label>
-                        <div class="input-group">
-                          <div class="input-group-addon">
-                           <i class="fa fa-clock-o"></i>
-                          </div>
-                          <input type="text" name="datetime" class="form-control pull-right" placeholder="{{ date_start }} - {{ date_end }}" id="datetime" />
-                        </div><!-- /.input group -->
+                            <label>Start and Stop Date and Time</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <input type="text" name="datetime" class="form-control pull-right" placeholder="{{ date_start }} - {{ date_end }}" id="datetime" />
+                            </div><!-- /.input group -->
                             <button type="submit" class="save btn btn-default">Add/Edit Tournament</button>
-                        </form>
-                  </div>
-                  </div>
-                </div><!-- /.box-body -->
-</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        $(function () {
+            $('select').select2();
+            $('#datetime').daterangepicker({timePicker: true, timePicker24Hour: true, timePickerIncrement: 30, format: 'YYYY-MM-DD HH:MM'});
+        });
+    </script>
+{% endblock%}
