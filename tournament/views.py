@@ -1,12 +1,12 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 from tournament.models import Tournament, Division
 
-# Create your views here.
 
 class index(ListView):
     model = Tournament
     template_name = "tournament_list.html"
+
 
 def details(request, slug):
     context = dict()

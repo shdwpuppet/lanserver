@@ -2,6 +2,7 @@ from django.db import models
 from teams.models import Team
 from django.db.models import Count
 from django.utils.text import slugify
+from matches.models import Match
 
 
 class Tournament(models.Model):
@@ -121,6 +122,17 @@ class Group(models.Model):
     def __str__(self):
         return self.name
 
+    def update_record(self, match):
+        pass
+
+    def update_rank(self):
+        records = self.record_set.order_by('win', 'loss', 'rf')
+        ct = 0
+        for record in records[::-1]:
+            rank = self.rank_set.filter(team=record.team)[0]
+            rank.rank = len(records) - ct
+            rank.save()
+
 
 class Bracket(models.Model):
     division = models.OneToOneField(Division)
@@ -132,7 +144,19 @@ class Seed(models.Model):
     seed = models.IntegerField()
 
 
+class Record(models.Model):
+    group = models.ForeignKey(Group)
+    team = models.ForeignKey(Team)
+    win = models.IntegerField()
+    loss = models.IntegerField()
+    rf = models.IntegerField()
+    ra = models.IntegerField()
+
+
 class Rank(models.Model):
     team = models.ForeignKey(Team)
     rank = models.IntegerField()
     group = models.ForeignKey(Group)
+
+
+
