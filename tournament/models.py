@@ -57,19 +57,21 @@ class Division(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField()
     tournament = models.ForeignKey(Tournament)
-    num_finalists = models.IntegerField(default=2) # number of teams that move from group stage to brackets
+    num_finalists = models.IntegerField(default=2)  # number of teams that move from group stage to brackets
     is_open = models.BooleanField(default=True)
 
     def get_assignable_groups(self):
-        return Group.objects.all().annotate(teams_count=Count('teams')).order_by('-teams_count').filter(division=self).filter(inc_in_assignment=True).reverse()
+        return Group.objects.all().annotate(teams_count=Count('teams')).order_by('-teams_count').filter(division=self).reverse()
 
     def assign_team_to_group(self, team, group=None):
         if group is None:
             group = self.get_assignable_groups()[0]
             group.teams.add(team)
+            group.update_max_round()
         else:
             group.teams.add(team)
-        group.max_round = group.teams.count() - 1
+            group.max_round = (group.teams.count() - 1)
+            group.update_max_round()
 
     def remove_team_from_group(self, team, group):
         group.teams.remove(team)
@@ -90,6 +92,7 @@ class Division(models.Model):
         group.current_round = 0
         group.max_round = 0
         group.save()
+        return group
 
     class Meta:
         verbose_name = "Division"
@@ -114,24 +117,55 @@ class Group(models.Model):
     name = models.CharField(max_length=50)
     teams = models.ManyToManyField(Team)
     # should this group be included in the automatic inc_in_assignment
-    inc_in_assignment = models.BooleanField()
-    current_round = models.IntegerField()
+    current_round = models.IntegerField(default=1)
     max_round = models.IntegerField()
     is_finished = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
 
+    def get_fixtures(self):
+        teams = list(self.teams.all())
+        if len(teams) % 2:
+            teams.append(None)
+        rotation = list(teams)
+        fixtures = []
+        for i in range(0, len(teams) - 1):
+            fixtures.append(rotation)
+            rotation = [rotation[0]] + [rotation[-1]] + rotation[1:-1]
+        return fixtures
+
     def update_record(self, match):
         pass
 
-    def update_rank(self):
+    def update_max_round(self):
+        if self.teams.count() < 2:
+            self.max_round = 1
+        else:
+            self.max_round = self.teams.count() - 1
+            self.save()
+
+    def update_ranks(self):
         records = self.record_set.order_by('win', 'loss', 'rf')
         ct = 0
         for record in records[::-1]:
             rank = self.rank_set.filter(team=record.team)[0]
             rank.rank = len(records) - ct
             rank.save()
+
+    def start_round(self):
+        if self.current_round <= self.max_round:
+            # get the fixtures, find the round, assign the matches.
+            fixtures = self.get_fixtures()
+            this_round = fixtures[self.current_round]
+            for i in range(0, len(this_round), 2):
+                teams = this_round[i:i+2]
+                Match.objects.create(home_team=teams[0], away_team=teams[1], group=self, round=self.current_round)
+            self.current_round += 1
+            self.save()
+
+        else:  # all matches in this game have been played, seed the teams into the bracket.
+            pass
 
 
 class Bracket(models.Model):

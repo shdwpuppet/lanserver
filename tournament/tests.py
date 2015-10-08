@@ -1,40 +1,75 @@
 from django.test import TestCase
-from tournament.models import Tournament, Division, RRGroup
+from tournament.models import *
 from teams.models import Team
-from django.db.models import Count
+import datetime
+import itertools
 
-# Create your tests here.
 
 
-class TournamentTest(TestCase):
+class RoundTest(TestCase):
 
-    def create_tournament(self, name="test tournament", slug="This is a test tournament"):
-        return Tournament.objects.create(name=name, slug=slug)
+    def create_tournament_setup(self):
+        tournament = Tournament.objects.create(name='test tournament', slug='test', location='gxl', description='lalala', game='TF2', date_start=datetime.datetime.now(), date_end=datetime.datetime.now(), status='1')
+        division = Division.objects.create(div_type=1, name='test div', slug='testdiv', tournament=tournament)
+        group = division.create_group(name='Group A', inc_in_assignment=True)
+        t1 = Team.objects.create(name='Team 1')
+        t2 = Team.objects.create(name='Team 2')
+        t3 = Team.objects.create(name='Team 3')
+        t4 = Team.objects.create(name='Team 4')
+        teams = [t1, t2, t3, t4]
+        [division.assign_team_to_group(team) for team in teams]
+        group.update_max_round()
+        return {
+            'tournament': tournament,
+            'division': division,
+            'group': group,
+            'teams': teams,
+        }
 
-    def create_team(self, name='test team'):
-        return Team.objects.create(name=name)
+    def test_round_creation(self):
+        setup = self.create_tournament_setup()
+        group = setup['group']
+        self.assertEqual(group.name, 'Group A')
+        self.assertEqual(group.max_round, 3)
+        for _ in itertools.repeat(None, group.max_round):
+            group.start_round()
 
-    def create_RRGroup(self, name, division, assignable):
-        return RRGroup.objects.create(name=name, division=division, inc_in_assignment=assignable)
+        matches = group.match_set.all()
+        self.assertEqual(matches[0].home_team, setup['teams'][0])
+        self.assertEqual(matches[0].away_team, setup['teams'][1])
+        self.assertEqual(matches[1].home_team, setup['teams'][2])
+        self.assertEqual(matches[1].away_team, setup['teams'][3])
+        self.assertEqual(matches[2].home_team, setup['teams'][0])
+        self.assertEqual(matches[2].away_team, setup['teams'][3])
+        self.assertEqual(matches[3].home_team, setup['teams'][1])
+        self.assertEqual(matches[3].away_team, setup['teams'][2])
+        self.assertEqual(matches[4].home_team, setup['teams'][0])
+        self.assertEqual(matches[4].away_team, setup['teams'][2])
+        self.assertEqual(matches[5].home_team, setup['teams'][3])
+        self.assertEqual(matches[5].away_team, setup['teams'][1])
 
-    def create_division(div_type, tournament, name="Test Div", slug=""):
-        return Division.objects.create(div_type=div_type, name=name, slug=slug, tournament=tournament)
+    def test_round_creation_bye(self):
+        setup = self.create_tournament_setup()
+        group = setup['group']
+        self.assertEqual(group.name, 'Group A')
+        self.assertEqual(group.max_round, 3)
+        group.teams.remove(group.teams.all()[3])
+        self.assertEqual(group.teams.count(), 3)
+        for _ in itertools.repeat(None, group.max_round):
+            group.start_round()
 
-    def test_create_tournament(self):
-        t = self.create_tournament()
-        self.assertEqual(t.name, "test tournament")
+        matches = group.match_set.all()
+        self.assertEqual(matches[0].home_team, setup['teams'][0])
+        self.assertEqual(matches[0].away_team, setup['teams'][1])
+        self.assertEqual(matches[1].home_team, setup['teams'][2])
+        self.assertEqual(matches[1].away_team, None)
+        self.assertEqual(matches[2].home_team, setup['teams'][0])
+        self.assertEqual(matches[2].away_team, None)
+        self.assertEqual(matches[3].home_team, setup['teams'][1])
+        self.assertEqual(matches[3].away_team, setup['teams'][2])
+        self.assertEqual(matches[4].home_team, setup['teams'][0])
+        self.assertEqual(matches[4].away_team, setup['teams'][2])
+        self.assertEqual(matches[5].home_team, None)
+        self.assertEqual(matches[5].away_team, setup['teams'][1])
 
-    def test_add_teams_to_groups(self):
-        team1 = self.create_team(name="team1")
-        team2 = self.create_team(name="team2")
-        team3 = self.create_team(name="team3")
-        t = self.create_tournament()
-        d = Division.objects.create(div_type=1, name="test div", slug="", tournament=t)
-        r1 = self.create_RRGroup(name="A", division=d, assignable=True)
-        r2 = self.create_RRGroup(name="B", division=d, assignable=True)
-        d.assign_team_to_rrgroup(team=team1, group=r1)
-        self.assertIn(team1, r1.teams.all())
-        print(d.get_assignable_groups())
-        d.assign_team_to_rrgroup(team=team2)
-        print(r2.teams.all())
-        self.assertIn(team2, r2.teams.all())
+

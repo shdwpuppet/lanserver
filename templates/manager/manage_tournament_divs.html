@@ -9,10 +9,12 @@
                     <div class="box-tools">
                         <form method='POST'>
                             {% csrf_token %}
-                            <div class="input-group" style="width: 300px;">
+                            <div class="input-group" style="width: 200px;">
                                 <input type="text" name="name" class="form-control input-sm pull-right" placeholder="New Division Name">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-flat btn-info" name="add_div">Add Division</button>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-flat btn-info" name="add_div" type="submit">Add Division</button>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -23,6 +25,25 @@
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">{{ div.name }}</h3>
+                        <div class="box-tools">
+                            <form method='POST'>
+                                {% csrf_token %}
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" name="name" class="form-control input-sm pull-right" placeholder="New Group Name">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-flat btn-info" name="add_group">Add Group</button>
+                                        <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a   href="{% url 'manager.views.TournamentDelete' pk=tournament.pk %}" class="text-red">Delete</a></li>
+                                            <li><a href="{% url 'edit_tournament' id=tournament.pk %}" class="text-green">Start/Advance All Groups</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <div class="row">
@@ -31,7 +52,75 @@
                                     {% if not forloop.counter|divisibleby:"2" %}
                                         <div class="box">
                                             <div class="box-header">
+                                                <h3 class="box-title">{{ group.name }}: Round {{ group.current_round }}</h3>
+                                                <div class="box-tools">
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                            <span class="caret"></span>
+                                                            <span class="sr-only">Toggle Dropdown</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu" role="menu">
+                                                            <li><a class = "delete" href="{% url 'manager.views.TournamentDelete' pk=tournament.pk %}" class="text-red">Delete</a></li>
+                                                            <li><a href="{% url 'drop_all_teams_from_group' pk=group.pk %}" class="text-red">Remove All Teams</a></li>
+                                                            <li><a href="{% url 'start_round_group' division_pk=div.pk group_pk=group.pk %}" class="text-green">Start Group/Move Group to Next Round</a></li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="{% url 'set_status' pk=tournament.pk status=1 %}">Set Rosters Open</a></li>
+                                                            <li><a href="{% url 'set_status' pk=tournament.pk status=2 %}">Set Rosters Locked</a></li>
+                                                            <li><a href="{% url 'set_status' pk=tournament.pk status=3 %}">Set Tournament Ended</a></li>
+                                                            <li><a href="{% url 'set_status' pk=tournament.pk status=4 %}">Set Tournament Hidden</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.box-header -->
+                                            <div class="box-body no-padding">
+                                                <table class="table table-condensed">
+                                                    <tbody>
+                                                    <tr>
+                                                        <th style="width: 10px">#</th>
+                                                        <th>Team Name</th>
+                                                        <th>Record</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    {% for team in group.teams.all %}
+                                                        <tr>
+                                                            <td>{{ forloop.counter }}</td>
+                                                            <td>{{team.name}}</td>
+                                                            <td>2-4</td>
+                                                            <td><a href="{% url 'drop_team_from_group' pk=group.pk team_pk=team.pk %}" class="text-bold text">X</a></td>
+                                                        </tr>
+                                                    {% endfor %}
+
+                                                    </tbody>
+                                                </table>
+                                            </div><!-- /.box-body -->
+                                        </div><!-- /.box -->
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {% for group in div.group_set.all %}
+                                    {% if forloop.counter|divisibleby:"2" %}
+                                        <div class="box">
+                                            <div class="box-header">
                                                 <h3 class="box-title">{{ group.name }}</h3>
+                                                <div class="box-tools">
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                            <span class="caret"></span>
+                                                            <span class="sr-only">Toggle Dropdown</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu" role="menu">
+                                                            <li><a class = "delete" href="{% url 'manager.views.TournamentDelete' pk=tournament.pk %}" class="text-red">Delete</a></li>
+                                                            <li><a href="{% url 'drop_all_teams_from_group' pk=group.pk %}" class="text-red">Remove All Teams</a></li>
+                                                            <li><a href="{% url 'divgroup_tournament' pk=tournament.pk %}" class="text-green">Start Group/Move Group to Next Round</a></li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="{% url 'set_status' pk=tournament.pk status=1 %}">Set Rosters Open</a></li>
+                                                            <li><a href="{% url 'set_status' pk=tournament.pk status=2 %}">Set Rosters Locked</a></li>
+                                                            <li><a href="{% url 'set_status' pk=tournament.pk status=3 %}">Set Tournament Ended</a></li>
+                                                            <li><a href="{% url 'set_status' pk=tournament.pk status=4 %}">Set Tournament Hidden</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </div><!-- /.box-header -->
                                             <div class="box-body no-padding">
                                                 <table class="table table-condensed">
@@ -53,36 +142,6 @@
                                                 </table>
                                             </div><!-- /.box-body -->
                                         </div><!-- /.box -->
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                            <div class="col-md-6">
-                                {% for group in div.group_set.all %}
-                                    {% if forloop.counter|divisibleby:"2" %}
-                                        <div class="box">
-                                            <div class="box-header">
-                                                <h3 class="box-title">{{ group.name }}</h3>
-                                            </div><!-- /.box-header -->
-                                            <div class="box-body no-padding">
-                                                <table class="table table-condensed">
-                                                    <tbody>
-                                                    <tr>
-                                                        <th style="width: 10px">#</th>
-                                                        <th>Team Name</th>
-                                                        <th>Record</th>
-                                                    </tr>
-                                                    {% for team in group.teams.all %}
-                                                        <tr>
-                                                            <td>{{ forloop.counter }}</td>
-                                                            <td><a href="{%  url 'teams.views.details' team_id=team.id %}">{{team.name}}</a></td>
-                                                            <td>2-4</td>
-                                                        </tr>
-                                                    {% endfor %}
-
-                                                    </tbody>
-                                                </table>
-                                            </div><!-- /.box-body -->
-                                        </div>
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -108,35 +167,35 @@
                         <tbody>
                         {% for signup in tournament.signup_set.all %}
                             {% if not signup.is_completed %}
-                            <tr>
-                                <td>{{ signup.team.name }}</td>
-                                <td>
+                                <tr>
+                                    <td>{{ signup.team.name }}</td>
+                                    <td>
                                         <a
-                                           href="#"
-                                           data-toggle="tooltip"
-                                           title="{% for player in signup.team.player_set.all %}{{ player.user.username }}{% endfor %}"
+                                                href="#"
+                                                data-toggle="tooltip"
+                                                title="{% for player in signup.team.player_set.all %}{{ player.user.username }}{% endfor %}"
                                                 >{{ signup.team.get_captains.0.user.username }}</a>
-                                </td>
-                                <td><div class="btn-group">
-                                    <button type="button" class="btn btn-primary">Choose Div To Assign</button>
-                                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <span class="caret"></span>
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        {% for division in tournament.division_set.all %}
-                                        <li><a href="{% url 'add_team_to_div' team_pk=signup.team.pk division_pk=division.pk tournament_pk=tournament.pk %}" {% if signup.requested_div == division %}class="text-green"{% endif %}><b>{{ division.name }}</b></a></li>
-                                            <ul>
-                                                {% for group in division.group_set.all %}
-                                                <li><a href="{% url 'add_team_to_group' team_pk=signup.team.pk division_pk=division.pk tournament_pk=tournament.pk group_pk=group.pk %}">{{ group.name }}</a></li>
-                                                {% endfor %}
-                                            </ul>
-                                        <li class="divider"></li>
-                                        {% endfor %}
-                                        <li><a href="#" class="text-red">Remove Signup</a></li>
-                                    </ul>
-                                </div></td>
-                            </tr>
+                                    </td>
+                                    <td><div class="btn-group">
+                                        <button type="button" class="btn btn-primary">Choose Div To Assign</button>
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            {% for division in tournament.division_set.all %}
+                                                <li><a href="{% url 'add_team_to_div' team_pk=signup.team.pk division_pk=division.pk tournament_pk=tournament.pk %}" {% if signup.requested_div == division %}class="text-green"{% endif %}><b>{{ division.name }}</b></a></li>
+                                                <ul>
+                                                    {% for group in division.group_set.all %}
+                                                        <li><a href="{% url 'add_team_to_group' team_pk=signup.team.pk division_pk=division.pk tournament_pk=tournament.pk group_pk=group.pk %}">{{ group.name }}</a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                                <li class="divider"></li>
+                                            {% endfor %}
+                                            <li><a href="#" class="text-red">Remove Signup</a></li>
+                                        </ul>
+                                    </div></td>
+                                </tr>
                             {% endif %}
                         {% endfor %}
                         </tbody>
@@ -148,9 +207,9 @@
 {% endblock %}
 {% block scripts %}
     <script type="application/javascript">
-    $('[data-toggle="tooltip"]').tooltip({
-    trigger: 'hover',
-        'placement': 'top'
-    });
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: 'hover',
+            'placement': 'top'
+        });
     </script>
 {% endblock %}
