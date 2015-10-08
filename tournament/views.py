@@ -21,4 +21,4 @@ def details(request, slug):
             div = get_object_or_404(Division, name=request.POST['signup'], tournament=tournament)
             tournament.signup(team=user_teams[0], requested_div=div)
             context.update({'eligible': False})
-    return render(request, 'tournament_details.html', contex
+    return render(request, 'tournament_details.html', context)
