@@ -35,6 +35,7 @@ def details(request, team_id):
                 return redirect('teams.views.details', team_id=team_id)
         else:
             context.update({'form': TeamForm(instance=team)})
+    context.update({'active_matches': [match for match in team.get_all_matches() if not match.result_set.all()]}) # return all matches that dont have a result, this are unfinished
     return render(request, 'team_details.html', context)
 
 

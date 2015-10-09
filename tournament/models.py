@@ -72,6 +72,7 @@ class Division(models.Model):
             group.teams.add(team)
             group.max_round = (group.teams.count() - 1)
             group.update_max_round()
+        Record.objects.create(team=team, group=group, )
 
     def remove_team_from_group(self, team, group):
         group.teams.remove(team)
@@ -93,6 +94,11 @@ class Division(models.Model):
         group.max_round = 0
         group.save()
         return group
+
+    def start_playoffs(self):
+        if all(finished is True for finished in [group.is_finished for group in self.group_set.all()]):
+            pass
+
 
     class Meta:
         verbose_name = "Division"
@@ -152,6 +158,7 @@ class Group(models.Model):
             rank = self.rank_set.filter(team=record.team)[0]
             rank.rank = len(records) - ct
             rank.save()
+            ct += 1
 
     def start_round(self):
         if self.current_round <= self.max_round:
@@ -164,8 +171,9 @@ class Group(models.Model):
             self.current_round += 1
             self.save()
 
-        else:  # all matches in this game have been played, seed the teams into the bracket.
-            pass
+        else:  # all matches in this game have been played, set the group to finished and check if they are all finished at the div level
+            self.is_finished = True
+            self.save()
 
 
 class Bracket(models.Model):
@@ -181,10 +189,18 @@ class Seed(models.Model):
 class Record(models.Model):
     group = models.ForeignKey(Group)
     team = models.ForeignKey(Team)
-    win = models.IntegerField()
-    loss = models.IntegerField()
-    rf = models.IntegerField()
-    ra = models.IntegerField()
+    win = models.IntegerField(default=0)
+    loss = models.IntegerField(default=0)
+    rf = models.IntegerField(default=0)
+    ra = models.IntegerField(default=0)
+
+    def record_match(self, rf, ra):
+        if rf > ra:
+            self.win += 1
+        else:
+            self.loss += 1
+        self.rf += rf
+        self.ra += ra
 
 
 class Rank(models.Model):

@@ -3,6 +3,7 @@
 {% block subtitle %}Team Details{% endblock %}
 {% block primary %}
     <div class="row">
+    <div class="col-md-6">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
@@ -16,6 +17,40 @@
                 <div class="active tab-pane" id="profile">
                 </div>
                 <div class="tab-pane" id="history">
+                    <select class="form-control" id="tournamentSelector">
+                        <option value="0">Select Tournament</option>
+                        {% for group in team.group_set.all %}
+                            <option value="{{group.division.tournament.pk}}">{{ group.division.tournament.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% for group in team.group_set.all %}
+                        <div id="{{ group.division.tournament.pk }}">
+                            {% for match in team.get_all_matches %}
+                                {% if match.group.division.tournament == group.division.tournament and match.result_set %}
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>Home Team</th>
+                                            <th>Away Team</th>
+                                            <th>Map</th>
+                                            <th>Date</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for match in active_matches %}
+                                            <tr>
+                                                <td>{{ match.home_team.name }}</td>
+                                                <td>{% if match.away_team %}{{ match.away_team.name }}{% else %}BYE{% endif %}</td>
+                                                <td>{% if match.map %}{{ match.map.name }}{% else %}Map TBD{% endif %}</td>
+                                                <td>{% if is_captain %}Link to match manager{% else %}Upcoming{% endif %}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
                 </div>
                 <div class="tab-pane" id="stats">
                 </div>
@@ -44,9 +79,9 @@
                         </div>
                         <form method="post">
                             <div class="box">
-                            <div class="box-header">
-                                <h3 class="box-title">Captain</h3>
-                            </div>
+                                <div class="box-header">
+                                    <h3 class="box-title">Captain</h3>
+                                </div>
                                 <div class="form-group">
                                     <label for="new_captain">New Captain</label>
                                     <select class="form-control" name="new_captain">
@@ -60,7 +95,58 @@
                         </form>
                     </div>
                 {% endif %}
+            </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">
+                    Active Matches
+                </h3>
+            </div>
+            <div class="box-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Home Team</th>
+                        <th>Away Team</th>
+                        <th>Map</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for match in active_matches %}
+                        <tr>
+                            <td>{{ match.home_team.name }}</td>
+                            <td>{% if match.away_team %}{{ match.away_team.name }}{% else %}BYE{% endif %}</td>
+                            <td>{% if match.map %}{{ match.map.name }}{% else %}Map TBD{% endif %}</td>
+                            <td>{% if is_captain %}Link to match manager{% else %}Upcoming{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 {% endblock %}
+
+{% block scripts %}
+    <script type="application/javascript">
+        $(document).ready(function() {
+            $.viewMap = {
+                {% for group in team.group_set.all %}
+                    '0' : $([]),
+                    '{{ group.division.tournament.pk }}' : $('#{{ group.division.tournament.pk }}'),
+                {% endfor %}
+            };
+            $.each($.viewMap, function() { this.hide(); });
+            $('#tournamentSelector').change(function() {
+                // hide all
+                $.each($.viewMap, function() { this.hide(); });
+                // show current
+                $.viewMap[$(this).val()].show();
+            });
+        });</script>
+{% endblock%}

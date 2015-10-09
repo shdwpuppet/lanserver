@@ -23,6 +23,9 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
+    def get_all_matches(self):
+        return self.home.all() | self.away.all()
+
 
 class PlayerManager(models.Manager):
     use_for_related_fields = True
