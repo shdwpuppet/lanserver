@@ -26,6 +26,9 @@ class Team(models.Model):
     def get_all_matches(self):
         return self.home.all() | self.away.all()
 
+    class Meta:
+        managed = True
+
 
 class PlayerManager(models.Manager):
     use_for_related_fields = True
