@@ -15,6 +15,89 @@
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane" id="profile">
+                    <div class="box box-primary">
+                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                        <div class="box-header bg-blue-gradient">
+                            <h1 class="box-title">{{ team.name }}</h1>
+                            <div class="box-tools">
+                                {% if request.user.player_set.all.0 in team.player_set.all %}
+                                    <a href="{% url 'leave_team' %}"><button type='button' class="btn btn-sm">Leave Team</button></a>
+                                {% else %}
+                                    <button type='button' class="btn btn-sm" data-toggle="modal" data-target="#joinmodal">Join Team</button>
+                                    {% if request.user.player_set.all.0 in user.team_set.all.0.get_captains %}
+                                        <div class="modal modal-danger" id="joinmodal" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        <h4 class="modal-title">Cannot Join Team</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>You are the captain of your current team <a href="{% url 'team_detail' team_id=request.user.team_set.all.0.pk %}">{{ request.user.team_set.all.0.name }}</a>. Please leave the team or transfer captain to another player to join this team.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-outline">Save changes</button>
+                                                    </div>
+                                                </div><!-- /.modal-content -->
+                                            </div><!-- /.modal-dialog -->
+                                        </div>
+                                    {% else %}
+                                        <div class="modal modal-primary" id="joinmodal" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            <h4 class="modal-title text-grey">Join Team</h4>
+                                                        </div>
+                                                    <form method="post">
+                                                        <div class="modal-body">
+                                                            {% csrf_token %}
+                                                            <div class="input-group">
+                                                                <label for="pass" class="control-label">Join Password</label>
+                                                                <input type="text" class="form-control" name="pass" placeholder="Password">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-outline" name="join_team" type="submit">Join Team</button>
+                                                        </div>
+                                                    </form>
+                                                </div><!-- /.modal-content -->
+                                            </div><!-- /.modal-dialog -->
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="box-body no-padding">
+                                    <table class="table table-condensed">
+                                        <tbody><tr>
+                                            <th>Players</th>
+                                        </tr>
+                                        {% for player in team.player_set.all %}
+                                            <tr>
+                                                <td>{{ player.user.username }}{% if player.position == 1 %} (captain){% endif %}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody></table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box-body no-padding">
+                                    <label>Website</label>
+                                    <span>&nbsp; &nbsp;</span>
+                                    <span>{{ team.website }}</span>
+                                    <br />
+                                    <label>Overall Record</label>
+                                    <span>&nbsp; &nbsp;</span>
+                                    <span>{{ team.get_overall_record.wins }} - {{ team.get_overall_record.loss }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane" id="history">
                     <select class="form-control" id="tournamentSelector">
@@ -25,34 +108,33 @@
                     </select>
                     {% for group in team.group_set.all %}
                         <div id="{{ group.division.tournament.pk }}">
-                            {% for match in team.get_all_matches %}
-                                {% if match.group.division.tournament == group.division.tournament and match.result_set %}
-                                    <table id="example1" class="table table-bordered table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th>Home Team</th>
-                                            <th>Away Team</th>
-                                            <th>Map</th>
-                                            <th>Date</th>
-                                        </tr>
-                                        </thead>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Home Team</th>
+                                    <th>Away Team</th>
+                                    <th>Map</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                {% for match in team.get_all_matches %}
+                                    {% if match.group.division.tournament == group.division.tournament %}
                                         <tbody>
-                                        {% for match in active_matches %}
-                                            <tr>
-                                                <td>{{ match.home_team.name }}</td>
-                                                <td>{% if match.away_team %}{{ match.away_team.name }}{% else %}BYE{% endif %}</td>
-                                                <td>{% if match.map %}{{ match.map.name }}{% else %}Map TBD{% endif %}</td>
-                                                <td>{% if is_captain %}Link to match manager{% else %}Upcoming{% endif %}</td>
-                                            </tr>
-                                        {% endfor %}
+                                        <tr>
+                                            <td>{{ match.home_team.name }}</td>
+                                            <td>{% if match.away_team %}{{ match.away_team.name }}{% else %}BYE{% endif %}</td>
+                                            <td>{% if match.map %}{{ match.map.name }}{% else %}Map TBD{% endif %}</td>
+                                            <td>{% if is_captain %}Link to match manager{% else %}Upcoming{% endif %}</td>
+                                        </tr>
                                         </tbody>
-                                    </table>
-                                {% endif %}
-                            {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </table>
                         </div>
                     {% endfor %}
                 </div>
                 <div class="tab-pane" id="stats">
+                    <span>Stats Coming Soon</span>
                 </div>
                 {% if is_captain == True %}
                     <div class="tab-pane" id="edit">
@@ -149,4 +231,9 @@
                 $.viewMap[$(this).val()].show();
             });
         });</script>
+    <script type="application/javascript">
+        $('#joinmodal').on('shown.bs.modal', function () {
+            $('#myInput').focus()
+        });
+    </script>
 {% endblock%}

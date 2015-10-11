@@ -14,9 +14,8 @@ class Match(models.Model):
     round = models.IntegerField(default=1)
 
 
-
 class Result(models.Model):
-    match = models.OneToOneField(Match)
+    match = models.OneToOneField(Match, null=True, blank=True)
     winner = models.ForeignKey(Team, related_name='winner')
     loser = models.ForeignKey(Team, related_name='loser', null=True, blank=True)
     winner_rf = models.IntegerField()

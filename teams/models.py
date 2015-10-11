@@ -26,6 +26,13 @@ class Team(models.Model):
     def get_all_matches(self):
         return self.home.all() | self.away.all()
 
+    def get_overall_record(self):
+        return{
+            'wins': len(self.winner.all()),
+            'loss': len(self.loser.all()),
+        }
+
+
     class Meta:
         managed = True
 
@@ -37,11 +44,15 @@ class PlayerManager(models.Manager):
         if Team.objects.filter(players__username=user.username):
             pass
         else:
-            return Player.objects.create(user=user, team=team, position=position)
+            player = Player.objects.create(user=user, team=team, position=position)
+        if len(Player.objects.filter(team=team)) == 1:
+            player.position = 1
+            player.save()
+        return player
 
     def remove_player(self, user):
-        player = Player.objects.get(user=user)
-        player.delete()
+        player = Player.objects.filter(user=user)
+        [player.delete() for player in player]
 
     def transfer_player(self, user, new_team):
         self.remove_player(user)
