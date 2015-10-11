@@ -67,6 +67,7 @@ def teamManager(request):
 
 @staff_member_required
 def tournamentManager(request, id=None):
+    context = {}
     if id:
         tournament = get_object_or_404(Tournament, pk=id)
         date_start = datetime.datetime.strftime(tournament.date_start, '%Y-%m-%d %H:%M')
