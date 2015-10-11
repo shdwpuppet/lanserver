@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}
+    Manage Match
+{% endblock title %}
+{% block primary %}
+    <div class="box box-default">
+    <div class="box-body">
+        {% if phase == 'pick_map' %}
+            <p>You are now in the map picking phase of match setup. If the maps under map remaining are links, it is your turn to vote to veto. Each team will veto two maps, alternating between teams. After four maps have been vetoed, the map will be randomly selected from the remaining maps and a server will be assigned to your match. If you have any problems with this, please contact an admin.</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="box-body no-padding">
+                        <table class="table table-condensed">
+                            <tbody><tr>
+                                <th>{{ match.home_team }} Vetoes</th>
+                            </tr>
+                            {% for map in match.home_veto.all %}
+                                <tr>
+                                    <td>{{ map.name }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody></table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="box-body no-padding">
+                        <table class="table table-condensed text-center">
+                            <tbody><tr>
+                                <th>Maps Remaining</th>
+                            </tr>
+                            {% for map in maps_remaining %}
+                                <tr>
+                                    <td>{% if 'picking_team' == request.user.team_set.all.0 %}<a href="{% url 'veto_map' match_id=match.pk map_id=map.pk %}">{{ map.name }}</a>{% else %}{{ map.name }}{% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody></table>
+                    </div>
+                </div>
+                <div class="col-md-4"><div class="box-body no-padding">
+                    <table class="table table-condensed text-right">
+                        <tbody><tr>
+                            <th>{{ match.away_team }} Vetoes</th>
+                        </tr>
+                        {% for map in match.away_veto.all %}
+                            <tr>
+                                <td>{{ map.name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody></table>
+                </div></div>
+
+
+            </div>
+
+        {% else %}
+            {{ match.server }}
+            {{ match.map }}
+        {% endif %}
+    </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}

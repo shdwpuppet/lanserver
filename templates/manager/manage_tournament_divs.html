@@ -30,6 +30,7 @@
                                 {% csrf_token %}
                                 <div class="input-group" style="width: 300px;">
                                     <input type="text" name="name" class="form-control input-sm pull-right" placeholder="New Group Name">
+                                    <input type="hidden" name="div_id" value="{{ div.id }}">
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-flat btn-info" name="add_group">Add Group</button>
                                         <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

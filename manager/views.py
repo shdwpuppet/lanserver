@@ -122,7 +122,9 @@ def tournamentDivGroupManager(request, pk):
             tournament.add_division(dtype=1, name=request.POST.get('name'), num_finalists=2)
             return redirect(tournamentDivGroupManager, pk=tournament.pk)
         elif 'add_group' in request.POST:
-            pass
+            div = Division.objects.get(pk=request.POST.get('div_id'))
+            div.create_group(name=request.POST.get('name'), inc_in_assignment=True)
+            return redirect(tournamentDivGroupManager, pk=tournament.pk)
         elif 'edit_div' in request.POST:
             pass
         elif 'edit_group' in request.POST:

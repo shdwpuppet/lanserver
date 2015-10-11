@@ -205,6 +205,15 @@ class Record(models.Model):
         self.ra += ra
 
 
+class Server(models.Model):
+    name = models.CharField(max_length=64)
+    ip = models.CharField(max_length=20)
+    is_in_use = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+
 class Rank(models.Model):
     team = models.ForeignKey(Team)
     rank = models.IntegerField()

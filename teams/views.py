@@ -61,7 +61,7 @@ def add_team(request):
             if form.is_valid():
                 team = form.save()
                 Player.objects.add_player(user=request.user, team=team, position=1)
-                return redirect('team_details.html', {'team': team})
+                return redirect('teams.views.details', team_id=team.pk)
         else:
             form = TeamForm()
     return render(request, 'team_add.html', {'form': form})
