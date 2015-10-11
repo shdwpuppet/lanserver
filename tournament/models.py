@@ -2,7 +2,8 @@ from django.db import models
 from teams.models import Team
 from django.db.models import Count
 from django.utils.text import slugify
-from matches.models import Match, Map
+from matches.models import Match
+from map.models import Map
 
 
 class Tournament(models.Model):
