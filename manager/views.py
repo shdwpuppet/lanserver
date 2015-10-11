@@ -67,7 +67,6 @@ def teamManager(request):
 
 @staff_member_required
 def tournamentManager(request, id=None):
-    context = {}
     if id:
         tournament = get_object_or_404(Tournament, pk=id)
         date_start = datetime.datetime.strftime(tournament.date_start, '%Y-%m-%d %H:%M')
@@ -88,15 +87,14 @@ def tournamentManager(request, id=None):
             form.save()
 
             return redirect(tournamentManager)
-    else:
-        form = TournamentForm(instance=tournament)
-        tournaments = Tournament.objects.all()
-        context = {
+    form = TournamentForm(instance=tournament)
+    tournaments = Tournament.objects.all()
+    context = {
             'tournaments': tournaments,
             'form': form,
             'date_start': date_start,
             'date_end': date_end,
-        }
+    }
     return render(request, 'manager/manage_tournaments.html', context)
 
 @staff_member_required
