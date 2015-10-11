@@ -5,12 +5,14 @@ from teams.models import Team
 class Map(models.Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.name
 
 class Match(models.Model):
     home_team = models.ForeignKey(Team, related_name='home', null=True)
     away_team = models.ForeignKey(Team, related_name='away', null=True)
     map = models.ForeignKey(Map, null=True, blank=True)
-    group = models.ForeignKey('tournament.Group')
+    group = models.ForeignKey('tournament.Group', null=True)
     round = models.IntegerField(default=1)
 
 

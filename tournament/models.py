@@ -2,7 +2,7 @@ from django.db import models
 from teams.models import Team
 from django.db.models import Count
 from django.utils.text import slugify
-from matches.models import Match
+from matches.models import Match, Map
 
 
 class Tournament(models.Model):
@@ -24,8 +24,10 @@ class Tournament(models.Model):
     date_start = models.DateTimeField()
     date_end = models.DateTimeField()
     status = models.IntegerField(choices=STATUS, default='1')
+    map_pool = models.ManyToManyField(Map)
 
     class Meta:
+        managed = True
         verbose_name = "Tournaments"
         verbose_name_plural = "Tournaments"
 

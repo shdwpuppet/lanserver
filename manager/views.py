@@ -79,12 +79,13 @@ def tournamentManager(request, id=None):
     if request.method == 'POST':
         form = TournamentForm(request.POST, instance=tournament)
         if form.is_valid():
-            form.save(commit=False)
             dates = request.POST.get('datetime').split(' - ')
             tournament.date_start = dates[0]
             tournament.date_end = dates[1]
             tournament.slug = slugify(tournament.name)
             tournament.save()
+            form.save()
+
             return redirect(tournamentManager)
     else:
         form = TournamentForm(instance=tournament)

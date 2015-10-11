@@ -31,8 +31,7 @@ class Team(models.Model):
             'wins': len(self.winner.all()),
             'loss': len(self.loser.all()),
         }
-
-
+    
     class Meta:
         managed = True
 
