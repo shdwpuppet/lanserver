@@ -2,7 +2,7 @@ from django.db import models
 from teams.models import Team
 from django.db.models import Count
 from django.utils.text import slugify
-from matches.models import Match
+from matches.models import Match, Result
 from map.models import Map
 
 
@@ -148,20 +148,24 @@ class Group(models.Model):
     def update_record(self, match):
         if match.result:
             home_record = Record.objects.get(group=self, team=match.home_team)
-            away_record = Record.objects.get(group=self, team=match.away_team)
+            if match.away_team:
+                away_record = Record.objects.get(group=self, team=match.away_team)
 
             if match.result.winner == match.home_team:
                 home_record.win += 1
-                away_record.loss += 1
                 home_record.rf += match.result.winner_rf
                 home_record.ra += match.result.winner_ra
-                away_record.rf += match.result.loser_rf
-                away_record.ra += match.result.loser_ra
+                if away_record:
+                    away_record.rf += match.result.loser_rf
+                    away_record.ra += match.result.loser_ra
+                    away_record.loss += 1
+
             else:
-                away_record.win += 1
+                if away_record:
+                    away_record.win += 1
+                    away_record.rf += match.result.winner_rf
+                    away_record.ra += match.result.winner_ra
                 home_record.loss += 1
-                away_record.rf += match.result.winner_rf
-                away_record.ra += match.result.winner_ra
                 home_record.rf += match.result.loser_rf
                 home_record.ra += match.result.loser_ra
             self.update_ranks()
@@ -191,7 +195,18 @@ class Group(models.Model):
             this_round = fixtures[self.current_round]
             for i in range(0, len(this_round), 2):
                 teams = this_round[i:i+2]
-                Match.objects.create(home_team=teams[0], away_team=teams[1], group=self, round=self.current_round)
+                if not teams[0]:
+                    teams[0] = teams[1]
+                    teams[1] = None
+                match = Match.objects.create(home_team=teams[0], away_team=teams[1], group=self, round=self.current_round)
+                if not match.away_team:
+                    result = Result()
+                    result.match = match
+                    result.record_result(t1=match.home_team, s1=3, is_bye=True)
+                    result.save()
+                    record = Record.objects.get(group=self, team=match.home_team)
+                    record.record_match(rf=3, ra=0)
+
             self.current_round += 1
             self.save()
 
@@ -202,6 +217,11 @@ class Group(models.Model):
 
 class Bracket(models.Model):
     division = models.OneToOneField(Division)
+    round = models.IntegerField()
+    is_lower = models.BooleanField(default=False)
+
+
+
 
 
 class Seed(models.Model):
@@ -225,6 +245,7 @@ class Record(models.Model):
             self.loss += 1
         self.rf += rf
         self.ra += ra
+        self.save()
 
 
 class Server(models.Model):

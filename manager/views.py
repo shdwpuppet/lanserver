@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
-from django.views.generic.edit import DeleteView
-from django.core.urlresolvers import reverse_lazy
+from matches.models import Match
 from teams.models import Team
 from tournament.models import Tournament, Division, Group, Signup
 from tournament.forms import TournamentForm
@@ -63,6 +62,11 @@ def start_round(request, division_pk, group_pk=None):
 def teamManager(request):
     teams = Team.objects.all()
     return render(request, 'manager/manage_teams.html', {'teams': teams})
+
+@staff_member_required
+def matchManager(request):
+    matches = Match.objects.filter(result=None)
+    return render(request, 'manager/manage_matches.html', {'matches':matches})
 
 
 @staff_member_required
