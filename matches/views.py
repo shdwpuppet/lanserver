@@ -14,7 +14,7 @@ def detail(request, match_pk):
 def veto_map(request, match_id, map_id):
     match = get_object_or_404(Match, pk=match_id)
     captains = match.home_team.get_captains() | match.away_team.get_captains()
-    if request.user in captains or request.user.is_staff:
+    if request.user.player_set[0] in captains or request.user.is_staff:
         map = get_object_or_404(Map, pk=map_id)
         if request.user.team_set.all()[0] == match.home_team:
             match.home_veto.add(map)
@@ -32,7 +32,7 @@ def veto_map(request, match_id, map_id):
 def match_setup(request, match_pk):
     match = get_object_or_404(Match, pk=match_pk)
     captains = match.home_team.get_captains() | match.away_team.get_captains()
-    if request.user in captains or request.user.is_staff:
+    if request.user.player_set[0] in captains or request.user.is_staff:
         context={'match': match}
         map_pool = list(match.group.division.tournament.map_pool.all())
         [map_pool.remove(map) for map in map_pool if map in match.away_veto.all()]
