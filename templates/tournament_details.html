@@ -77,7 +77,7 @@
                                                                     <tr>
                                                                         <td>1.</td>
                                                                         <td>{{team.name}}</td>
-                                                                        <td>2-4</td>
+                                                                        <td>{% for record in group.record_set.all %}{% if record.team == team %}{{ record.win }}-{{ record.loss }}{% endif %}{% endfor %}</td>
                                                                         <td><span class="badge bg-red">55%</span></td>
                                                                     </tr>
                                                                 {% endfor %}

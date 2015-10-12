@@ -145,7 +145,26 @@ class Group(models.Model):
         return fixtures
 
     def update_record(self, match):
-        pass
+        if match.result:
+            home_record = Record.objects.get(group=self, team=match.home_team)
+            away_record = Record.objects.get(group=self, team=match.away_team)
+
+            if match.result.winner == match.home_team:
+                home_record.win += 1
+                away_record.loss += 1
+                home_record.rf += match.result.winner_rf
+                home_record.ra += match.result.winner_ra
+                away_record.rf += match.result.loser_rf
+                away_record.ra += match.result.loser_ra
+            else:
+                away_record.win += 1
+                home_record.loss += 1
+                away_record.rf += match.result.winner_rf
+                away_record.ra += match.result.winner_ra
+                home_record.rf += match.result.loser_rf
+                home_record.ra += match.result.loser_ra
+        else:
+            pass
 
     def update_max_round(self):
         if self.teams.count() < 2:
