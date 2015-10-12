@@ -30,7 +30,7 @@
                             </tr>
                             {% for map in maps_remaining %}
                                 <tr>
-                                    <td>{% if 'picking_team' == request.user.team_set.all.0 %}<a href="{% url 'veto_map' match_id=match.pk map_id=map.pk %}">{{ map.name }}</a>{% else %}{{ map.name }}{% endif %}</td>
+                                    <td>{% if picking_team == request.user.team_set.all.0 %}<a href="{% url 'veto_map' match_id=match.pk map_id=map.pk %}">{{ map.name }}</a>{% else %}{{ map.name }}{% endif %}</td>
                                 </tr>
                             {% endfor %}
                             </tbody></table>
