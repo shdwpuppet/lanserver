@@ -53,7 +53,7 @@
                                     {% if not forloop.counter|divisibleby:"2" %}
                                         <div class="box">
                                             <div class="box-header">
-                                                <h3 class="box-title">{{ group.name }}: Round {{ group.current_round }}</h3>
+                                                <h3 class="box-title">{{ group.name }}: Round {{ group.current_round }} of {{ group.max_round }}</h3>
                                                 <div class="box-tools">
                                                     <div class="btn-group">
                                                         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -63,7 +63,7 @@
                                                         <ul class="dropdown-menu" role="menu">
                                                             <li><a class = "delete" href="{% url 'manager.views.TournamentDelete' pk=tournament.pk %}" class="text-red">Delete</a></li>
                                                             <li><a href="{% url 'drop_all_teams_from_group' pk=group.pk %}" class="text-red">Remove All Teams</a></li>
-                                                            <li><a href="{% url 'start_round_group' division_pk=div.pk group_pk=group.pk %}" class="text-green">Start Group/Move Group to Next Round</a></li>
+                                                            {% if group.current_round < group.max_round %}<li><a href="{% url 'start_round_group' division_pk=div.pk group_pk=group.pk %}" class="text-green">Start Group/Move Group to Next Round</a></li>{% endif %}
                                                             <li class="divider"></li>
                                                             <li><a href="{% url 'set_status' pk=tournament.pk status=1 %}">Set Rosters Open</a></li>
                                                             <li><a href="{% url 'set_status' pk=tournament.pk status=2 %}">Set Rosters Locked</a></li>
@@ -103,7 +103,7 @@
                                     {% if forloop.counter|divisibleby:"2" %}
                                         <div class="box">
                                             <div class="box-header">
-                                                <h3 class="box-title">{{ group.name }}</h3>
+                                                <h3 class="box-title">{{ group.name }}: Round {{ group.current_round }} of {{ group.max_round }}</h3>
                                                 <div class="box-tools">
                                                     <div class="btn-group">
                                                         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -113,7 +113,7 @@
                                                         <ul class="dropdown-menu" role="menu">
                                                             <li><a class = "delete" href="{% url 'manager.views.TournamentDelete' pk=tournament.pk %}" class="text-red">Delete</a></li>
                                                             <li><a href="{% url 'drop_all_teams_from_group' pk=group.pk %}" class="text-red">Remove All Teams</a></li>
-                                                            <li><a href="{% url 'divgroup_tournament' pk=tournament.pk %}" class="text-green">Start Group/Move Group to Next Round</a></li>
+                                                            {% if group.current_round < group.max_round %}<li><a href="{% url 'divgroup_tournament' pk=tournament.pk %}" class="text-green">Start Group/Move Group to Next Round</a></li>{% endif %}
                                                             <li class="divider"></li>
                                                             <li><a href="{% url 'set_status' pk=tournament.pk status=1 %}">Set Rosters Open</a></li>
                                                             <li><a href="{% url 'set_status' pk=tournament.pk status=2 %}">Set Rosters Locked</a></li>
@@ -130,12 +130,14 @@
                                                         <th style="width: 10px">#</th>
                                                         <th>Team Name</th>
                                                         <th>Record</th>
+                                                        <th></th>
                                                     </tr>
                                                     {% for team in group.teams.all %}
                                                         <tr>
                                                             <td>{{ forloop.counter }}</td>
                                                             <td>{{team.name}}</td>
                                                             <td>{% for record in group.record_set.all %}{% if record.team == team %}{{ record.win }}-{{ record.loss }}{% endif %}{% endfor %}</td>
+                                                            <td><a href="{% url 'drop_team_from_group' pk=group.pk team_pk=team.pk %}" class="text-bold text">X</a></td>
                                                         </tr>
                                                     {% endfor %}
 

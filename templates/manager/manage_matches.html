@@ -1,11 +1,87 @@
 {% extends "base.html" %}
 {% block title%}
-Tournament List
+    Tournament List
 {% endblock %}
 {% block primary %}
-	<ul>
-  {% for match in matches %}
-    {{ match.home_team }} vs {{ match.away_team }}
-  {% endfor %}
-</ul>
+    <ul>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        {% for tournament in tournaments %}
+                            <li><a href="#tournament_{{ tournament.pk }}" data-toggle="tab">{{ tournament.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                        {% for tournament in tournaments %}
+                            <div class="tab-pane" id="tournament_{{ tournament.pk }}">
+                                <div class="nav-tabs-custom">
+                                    <ul class="nav nav-tabs">
+                                        {% for division in tournament.division_set.all %}
+                                            <li><a href="#division_{{ division.pk }}" data-toggle="tab">{{ division.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="tab-content">
+                                        {% for division in tournament.division_set.all %}
+                                            <div class="tab-pane" id="division_{{ division.pk }}">
+                                                <div class="nav-tabs-custom">
+                                                    <ul class="nav nav-tabs">
+                                                        {% for group in division.group_set.all %}
+                                                            <li><a href="#group_{{ group.pk }}" data-toggle="tab">{{ group.name }}</a></li>
+                                                        {% endfor %}
+                                                        <li><a href="#{{ division.pk }}_matches" data-toggle="tab">Divisional Matches</a></li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        {% for group in division.group_set.all %}
+                                                            <div class="tab-pane" id="group_{{ group.pk }}">
+                                                                {% for match in group.match_set.all %}
+                                                                    {{ match.home_team }} vs {{ match.away_team }}
+                                                                {% endfor %}
+                                                            </div><!-- /.group-pane -->
+                                                        {% endfor %}
+                                                        <div class="tab-pane" id="{{ division.pk }}_matches">
+                                                            {% for match in division.match_set.all %}
+                                                                {{ match.home_team }} vs {{ match.away_team }}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div><!-- /.group-content -->
+                                                </div>
+                                            </div><!-- /.division-pane -->
+                                        {% endfor %}
+                                    </div><!-- /.division-content -->
+                                </div>
+                            </div><!-- /.tournament-pane -->
+                        {% endfor %}
+                    </div><!-- /.tournament-content -->
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Add Match</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                {% if field.errors %}
+                                    <div class="form-group has-error">
+                                        <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>{% for error in field.errors %}{{ error }}{% endfor %}</label>
+                                        {{ field }}
+                                    </div>
+                                {% else %}
+                                    <div class="form-group">
+                                        {{ field.label_tag }} {{ field }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            <div class="form-group">
+                                <button type="submit" class="save btn btn-default">Add/Edit Match</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ul>
 {% endblock primary %}

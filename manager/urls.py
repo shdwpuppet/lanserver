@@ -19,4 +19,6 @@ urlpatterns = [
     url(r'^manage_tournaments/division/(?P<division_pk>\d+)/group/(?P<group_pk>\d+)/start_round/$', 'manager.views.start_round', name='start_round_group'),
     url(r'^manage_tournaments/division/(?P<division_pk>\d+)/start_round$', 'manager.views.start_round', name='start_round_div'),
     url(r'^manage_matches/$', 'manager.views.matchManager', name='match_manager'),
+    url(r'^manage_matches/edit/(?P<id>\d+)/$', 'manager.views.matchManager', name='edit_match'),
+
 ]

@@ -10,6 +10,7 @@ class Match(models.Model):
     group = models.ForeignKey('tournament.Group', null=True)
     round = models.IntegerField(default=1)
     vetoes = models.IntegerField(default=2)
+    division = models.ForeignKey('tournament.Division', null=True, blank=True)
     home_veto = models.ManyToManyField(Map, related_name='home_veto', null=True)
     away_veto = models.ManyToManyField(Map, related_name='away_veto', null=True)
     server = models.ForeignKey('tournament.Server', null=True)

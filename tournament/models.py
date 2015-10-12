@@ -192,37 +192,34 @@ class Group(models.Model):
         if self.current_round <= self.max_round:
             # get the fixtures, find the round, assign the matches.
             fixtures = self.get_fixtures()
-            this_round = fixtures[self.current_round]
-            for i in range(0, len(this_round), 2):
-                teams = this_round[i:i+2]
-                if not teams[0]:
-                    teams[0] = teams[1]
-                    teams[1] = None
-                match = Match.objects.create(home_team=teams[0], away_team=teams[1], group=self, round=self.current_round)
-                if not match.away_team:
-                    result = Result()
-                    result.match = match
-                    result.record_result(t1=match.home_team, s1=3, is_bye=True)
-                    result.save()
-                    record = Record.objects.get(group=self, team=match.home_team)
-                    record.record_match(rf=3, ra=0)
+            if self.current_round < self.max_round:
+                this_round = fixtures[self.current_round]
+                for i in range(0, len(this_round), 2):
+                    teams = this_round[i:i+2]
+                    if not teams[0]:
+                        teams[0] = teams[1]
+                        teams[1] = None
+                    match = Match.objects.create(home_team=teams[0], away_team=teams[1], group=self, round=self.current_round)
+                    if not match.away_team:
+                        result = Result()
+                        result.match = match
+                        result.record_result(t1=match.home_team, s1=3, is_bye=True)
+                        result.save()
+                        record = Record.objects.get(group=self, team=match.home_team)
+                        record.record_match(rf=3, ra=0)
 
-            self.current_round += 1
-            self.save()
+                self.current_round += 1
+                self.save()
 
-        else:  # all matches in this game have been played, set the group to finished and check if they are all finished at the div level
-            self.is_finished = True
-            self.save()
+            else:  # all matches in this game have been played, set the group to finished and check if they are all finished at the div level
+                self.is_finished = True
+                self.save()
 
 
 class Bracket(models.Model):
     division = models.OneToOneField(Division)
     round = models.IntegerField()
     is_lower = models.BooleanField(default=False)
-
-
-
-
 
 class Seed(models.Model):
     bracket = models.ForeignKey(Bracket)

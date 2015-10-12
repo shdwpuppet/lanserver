@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
 from matches.models import Match
 from teams.models import Team
+from matches.forms import MatchForm
 from tournament.models import Tournament, Division, Group, Signup
 from tournament.forms import TournamentForm
 from .decorators import staff_member_required
@@ -64,9 +65,26 @@ def teamManager(request):
     return render(request, 'manager/manage_teams.html', {'teams': teams})
 
 @staff_member_required
-def matchManager(request):
-    matches = Match.objects.filter(result=None)
-    return render(request, 'manager/manage_matches.html', {'matches':matches})
+def matchManager(request, id=None):
+    if id:
+        match = get_object_or_404(Match, pk=id)
+    else:
+        match = Match()
+    if request.method == 'POST':
+        form = MatchForm(request.POST, instance=match)
+        if form.is_valid():
+            form.save()
+            return redirect(matchManager)
+    form = MatchForm(instance=match)
+    orphan_matches = Match.objects.filter(group=None, division=None)
+    tournaments = Tournament.objects.all()
+    context = {
+        'orphan_matches': orphan_matches,
+        'tournaments': tournaments,
+        'form': form,
+
+    }
+    return render(request, 'manager/manage_matches.html', context)
 
 
 @staff_member_required
