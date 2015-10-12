@@ -86,7 +86,7 @@
                                                         <tr>
                                                             <td>{{ forloop.counter }}</td>
                                                             <td>{{team.name}}</td>
-                                                            <td>2-4</td>
+                                                                        <td>{% for record in group.record_set.all %}{% if record.team == team %}{{ record.win }}-{{ record.loss }}{% endif %}{% endfor %}</td>
                                                             <td><a href="{% url 'drop_team_from_group' pk=group.pk team_pk=team.pk %}" class="text-bold text">X</a></td>
                                                         </tr>
                                                     {% endfor %}
@@ -135,7 +135,7 @@
                                                         <tr>
                                                             <td>{{ forloop.counter }}</td>
                                                             <td>{{team.name}}</td>
-                                                            <td>2-4</td>
+                                                            <td>{% for record in group.record_set.all %}{% if record.team == team %}{{ record.win }}-{{ record.loss }}{% endif %}{% endfor %}</td>
                                                         </tr>
                                                     {% endfor %}
 

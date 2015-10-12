@@ -1,7 +1,7 @@
-__author__ = 'drshdwpuppet'
 from django import template
 
 register = template.Library()
+
 
 @register.filter
 def query(qs, **kwargs):
@@ -12,3 +12,8 @@ def query(qs, **kwargs):
           {% endfor %}
     """
     return qs.filter(**kwargs)
+
+
+@register.filter
+def sort_by(queryset, order):
+    return queryset.order_by(order)

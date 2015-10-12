@@ -75,7 +75,8 @@ class Division(models.Model):
             group.teams.add(team)
             group.max_round = (group.teams.count() - 1)
             group.update_max_round()
-        Record.objects.create(team=team, group=group, )
+        Record.objects.create(team=team, group=group)
+        Rank.objects.create(team=team, group=group, rank=1)
 
     def remove_team_from_group(self, team, group):
         group.teams.remove(team)
@@ -163,6 +164,7 @@ class Group(models.Model):
                 away_record.ra += match.result.winner_ra
                 home_record.rf += match.result.loser_rf
                 home_record.ra += match.result.loser_ra
+            self.update_ranks()
         else:
             pass
 

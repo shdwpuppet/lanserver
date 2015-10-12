@@ -53,8 +53,8 @@
             </div>
 
         {% else %}
-            {{ match.server }}
-            {{ match.map }}
+            You are playing {{ match.map }} on {{ match.server }} <a href="steam://{{ match.server.ip }}">connect {{ match.server.ip }}; password tf2gxl</a>
+
         {% endif %}
     </div>
     </div>

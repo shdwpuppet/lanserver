@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load tournament_query %}
 {% block title%}
 {{ tournament.name }} | <small>At {{ tournament.location }}</small>
 {% endblock %}
@@ -73,11 +74,11 @@
                                                                     <th>Record</th>
                                                                     <th style="width: 40px">Label</th>
                                                                 </tr>
-                                                                {% for team in group.teams.all %}
+                                                                {% for rank in group.rank_set.all|sort_by:'rank' %}
                                                                     <tr>
-                                                                        <td>1.</td>
-                                                                        <td>{{team.name}}</td>
-                                                                        <td>{% for record in group.record_set.all %}{% if record.team == team %}{{ record.win }}-{{ record.loss }}{% endif %}{% endfor %}</td>
+                                                                        <td>{{ rank.rank }}.</td>
+                                                                        <td>{{rank.team.name}}</td>
+                                                                        <td>{% for record in group.record_set.all %}{% if record.team == rank.team %}{{ record.win }}-{{ record.loss }}{% endif %}{% endfor %}</td>
                                                                         <td><span class="badge bg-red">55%</span></td>
                                                                     </tr>
                                                                 {% endfor %}
@@ -96,28 +97,28 @@
                                                         <div class="box-header">
                                                             <h3 class="box-title">{{ group.name }}</h3>
                                                         </div><!-- /.box-header -->
-                                                        <div class="box-body no-padding">
-                                                            <table class="table table-condensed">
-                                                                <tbody>
+                                                    <div class="box-body no-padding">
+                                                        <table class="table table-condensed">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th style="width: 10px">#</th>
+                                                                    <th>Team Name</th>
+                                                                    <th>Record</th>
+                                                                    <th style="width: 40px">Label</th>
+                                                                </tr>
+                                                                {% for rank in group.rank_set.all|sort_by:'rank' %}
                                                                     <tr>
-                                                                        <th style="width: 10px">#</th>
-                                                                        <th>Team Name</th>
-                                                                        <th>Record</th>
-                                                                        <th style="width: 40px">Label</th>
+                                                                        <td>{{ rank.rank }}.</td>
+                                                                        <td>{{rank.team.name}}</td>
+                                                                        <td>{% for record in group.record_set.all %}{% if record.team == rank.team %}{{ record.win }}-{{ record.loss }}{% endif %}{% endfor %}</td>
+                                                                        <td><span class="badge bg-red">55%</span></td>
                                                                     </tr>
-                                                                    {% for team in group.teams.all %}
-                                                                        <tr>
-                                                                            <td>1.</td>
-                                                                            <td>{{team.name}}</td>
-                                                                            <td>2-4</td>
-                                                                            <td><span class="badge bg-red">55%</span></td>
-                                                                        </tr>
-                                                                    {% endfor %}
+                                                                {% endfor %}
 
-                                                                </tbody>
-                                                            </table>
-                                                        </div><!-- /.box-body -->
-                                                    </div>
+                                                            </tbody>
+                                                        </table>
+                                                    </div><!-- /.box-body -->
+                                                    </div><!-- /.box -->
                                                 {% endif %}
                                             {% endfor %}
                                         </div>
