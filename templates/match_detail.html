@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load tournament_query %}
+{% block title %}
+    Match Page
+{% endblock title %}
+{% block primary %}
+    <div class="row no-padding">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <div class="box box-widget widget-user-2">
+                <div class="widget-user-header bg-blue">
+                <h3 class="widget-user-username">{{ match.home_team.name }}</h3>
+                <h5 class="widget-user-desc">{% for record in match.group.record_set.all %}{% if record.team == match.home_team %}{{ record.win }}-{{ record.loss }} Overall in {{ match.group.name }}{% endif %}{% endfor %}</h5>
+            </div>
+                <div class="box-footer no-padding">
+                <table class="table table-condensed">
+                    <tbody class="text-right">
+                    {% for player in match.home_team.player_set.all %}
+                        <tr>
+                            <td>{{ player.user.username }}{% if player.position == 1 %} (captain){% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody></table>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="box box-widget widget-user-2">
+                <div class="widget-user-header bg-red"><!-- /.widget-user-image -->
+                <h3 class="widget-user-username">{{ match.away_team.name }}</h3>
+                <h5 class="widget-user-desc">{% for record in match.group.record_set.all %}{% if record.team == match.away_team %}{{ record.win }}-{{ record.loss }} Overall in {{ match.group.name }}{% endif %}{% endfor %}</h5>
+            </div>
+                <div class="box-footer no-padding">
+                <table class="table table-condensed">
+                    <tbody class="text-left">
+                    {% for player in match.away_team.player_set.all %}
+                        <tr>
+                            <td>{{ player.user.username }}{% if player.position == 1 %} (captain){% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody></table>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row no-pad-top">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="box no-padding box-default">
+                <div class="box-header text-center">
+                    <h3 class="box-title">0 - 0</h3>
+                </div>
+                <div class="box-body">
+                    <div class="text-center">
+                        {% if match.result %}Match Complete.{% elif match.map %}Match currently live on{{ match.map }}{% else %}Match being set up{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

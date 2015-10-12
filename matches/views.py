@@ -6,10 +6,7 @@ import random
 
 def detail(request, match_pk):
     match = get_object_or_404(Match, pk=match_pk)
-    if request.method == "POST":
-        pass
-    else:
-        pass
+    return render(request, 'match_detail.html', {'match':match})
 
 def veto_map(request, match_id, map_id):
     match = get_object_or_404(Match, pk=match_id)

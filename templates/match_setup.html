@@ -53,8 +53,32 @@
             </div>
 
         {% else %}
-            You are playing {{ match.map }} on {{ match.server }} <a href="steam://{{ match.server.ip }}">connect {{ match.server.ip }}; password tf2gxl</a>
-
+            You are playing {{ match.map }} on {{ match.server }} <a href="steam://{{ match.server.ip }};password tf2gxl">connect {{ match.server.ip }}; password tf2gxl</a>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title">Report Score</h3>
+                        </div>
+                        <div class="box-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <label for="home_score">{{ match.home_team }}</label>
+                                    <input type="number" name="home_score">
+                                </div>
+                                <div class="input-group">
+                                    <label for="away_score">{{ match.away_team }}</label>
+                                    <input type="number" name="away_score">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
         {% endif %}
     </div>
     </div>

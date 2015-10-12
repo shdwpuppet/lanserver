@@ -124,7 +124,7 @@
                                             <td>{{ match.home_team.name }}</td>
                                             <td>{% if match.away_team %}{{ match.away_team.name }}{% else %}BYE{% endif %}</td>
                                             <td>{% if match.map %}{{ match.map.name }}{% else %}Map TBD{% endif %}</td>
-                                            <td>{% if is_captain %}<a href="{% url 'match_setup' match_pk=match.pk %}">Setup Match</a>{% else %}Upcoming{% endif %}</td>
+                            <td><a href="{% url 'match_detail' match_pk=match.pk %}">Match Details</a>{% if is_captain and not match.result %}/<a href="{% url 'match_setup' match_pk=match.pk %}">Setup</a>{% else %}Upcoming{% endif %}</td>
                                         </tr>
                                         </tbody>
                                     {% endif %}
@@ -203,7 +203,7 @@
                             <td>{{ match.home_team.name }}</td>
                             <td>{% if match.away_team %}{{ match.away_team.name }}{% else %}BYE{% endif %}</td>
                             <td>{% if match.map %}{{ match.map.name }}{% else %}Map TBD{% endif %}</td>
-                            <td>{% if is_captain %}Link to match manager{% else %}Upcoming{% endif %}</td>
+                            <td><a href="{% url 'match_detail' match_pk=match.pk %}">Match Details</a>{% if is_captain and not match.result %}/<a href="{% url 'match_setup' match_pk=match.pk %}">Setup</a>{% else %}Upcoming{% endif %}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
