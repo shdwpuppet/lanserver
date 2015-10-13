@@ -15,6 +15,8 @@ class Match(models.Model):
     away_veto = models.ManyToManyField(Map, related_name='away_veto', null=True)
     server = models.ForeignKey('tournament.Server', null=True)
     veto_turn = models.IntegerField(default=0)
+    is_setup = models.BooleanField(default=False)
+
 
 
 class Result(models.Model):

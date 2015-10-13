@@ -36,12 +36,15 @@ def group_team_dropper(request, pk, team_pk=None):
         signup = Signup.objects.filter(tournament=group.division.tournament).filter(team=team)[0]
         signup.is_completed = False
         signup.save()
+        team.rank_set.filter(group=group).delete()
     else:
         for team in group.teams.all():
             group.teams.remove(team)
             signup = Signup.objects.filter(tournament=group.division.tournament).filter(team=team)[0]
             signup.is_completed = False
             signup.save()
+
+            team.rank_set.filter(group=group).delete()
     return redirect(tournamentDivGroupManager, pk=group.division.tournament_id)
 
 @staff_member_required
