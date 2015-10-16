@@ -3,8 +3,8 @@ from django.utils.text import slugify
 from matches.models import Match
 from teams.models import Team
 from matches.forms import MatchForm
-from tournament.models import Tournament, Division, Group, Signup
-from tournament.forms import TournamentForm
+from tournament.models import Tournament, Division, Group, Signup, Server
+from tournament.forms import TournamentForm, ServerForm
 from .decorators import staff_member_required
 import datetime
 
@@ -13,6 +13,12 @@ def TeamDelete(request, pk):
     team = get_object_or_404(Team, pk=pk)
     team.delete()
     return redirect(teamManager)
+
+@staff_member_required
+def serverdelete(request, id):
+    server = get_object_or_404(Server, pk=id)
+    server.delete()
+    return redirect(serverManager)
 
 @staff_member_required
 def TournamentDelete(request, pk):
@@ -89,6 +95,27 @@ def matchManager(request, id=None):
     }
     return render(request, 'manager/manage_matches.html', context)
 
+@staff_member_required
+def serverManager(request, id=None):
+    if id:
+        server = get_object_or_404(Server, pk=id)
+    else:
+        server = Server()
+    if request.method == 'POST':
+        form = ServerForm(request.POST, instance=server)
+        if form.is_valid():
+            form.save()
+            return redirect(serverManager)
+    form = ServerForm(instance=server)
+    servers_in_use = Server.objects.filter(is_in_use=True)
+    servers = Server.objects.all()
+    context = {
+        'in_use': servers_in_use,
+        'servers': servers,
+        'form': form,
+
+    }
+    return render(request, 'manager/manage_servers.html', context)
 
 @staff_member_required
 def tournamentManager(request, id=None):

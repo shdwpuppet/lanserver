@@ -1,9 +1,11 @@
 from django.conf.urls import include, url
-from core.views import register, logout
+from django.views.generic import TemplateView
+from core.views import register
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    url(r'^$', 'core.views.index', name="index"),
     url(r'^teams/', include('teams.urls')),
     url(r'^manager/', include('manager.urls')),
     url(r'^tournaments/', include('tournament.urls')),

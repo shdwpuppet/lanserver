@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 import json, urllib
 from django.conf import settings
+from matches.models import Match
 
 @login_required(login_url='/login/steam/')
 def register(request):
@@ -54,3 +55,9 @@ def get_avatar(user):
             obj = urllib.request.urlopen("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}".format(key, steam_id)).read().decode()
             json_obj = json.loads(obj)
             return json_obj['response']['players'][0]['avatarfull']
+
+def index(request):
+    context = {}
+    active_matches = Match.objects.exclude(result__isnull=False)
+    context.update({"active_matches": active_matches})
+    return render(request, 'index.html', context)

@@ -75,8 +75,8 @@ class Division(models.Model):
             group.teams.add(team)
             group.max_round = (group.teams.count() - 1)
             group.update_max_round()
-        Record.objects.create(team=team, group=group)
-        Rank.objects.create(team=team, group=group, rank=1)
+        Record.objects.get_or_create(team=team, group=group)
+        Rank.objects.get_or_create(team=team, group=group, rank=1)
 
     def remove_team_from_group(self, team, group):
         group.teams.remove(team)
@@ -249,6 +249,7 @@ class Server(models.Model):
     name = models.CharField(max_length=64)
     ip = models.CharField(max_length=20)
     is_in_use = models.BooleanField(default=False)
+    port = models.IntegerField()
 
     def __str__(self):
         return self.name

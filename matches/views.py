@@ -50,12 +50,16 @@ def match_setup(request, match_pk):
         else:
             match.server = random.choice(Server.objects.filter(is_in_use=False))
             match.save()
+            match.server.is_in_use = True
+            match.server.save()
             pass
         if request.method == 'POST':
             result = Result()
             result.match = match
             result.record_result(t1=match.home_team, s1=request.POST.get('home_score'), t2=match.away_team, s2=request.POST.get('away_score'))
             result.save()
+            match.server.is_in_use = False
+            match.server.save()
             return redirect(detail, match_pk=match_pk)
         return render(request, 'match_setup.html', context)
     else:
