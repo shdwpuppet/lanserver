@@ -34,6 +34,13 @@ def tournament_setstatus(request, pk, status):
     return redirect(tournamentManager)
 
 @staff_member_required
+def match_setup_complete(request, id):
+    match = get_object_or_404(Match, pk=id)
+    match.is_setup = True
+    match.save()
+    return redirect(matchManager)
+
+@staff_member_required
 def group_team_dropper(request, pk, team_pk=None):
     group = get_object_or_404(Group, pk=pk)
     if team_pk:
@@ -86,9 +93,11 @@ def matchManager(request, id=None):
             return redirect(matchManager)
     form = MatchForm(instance=match)
     orphan_matches = Match.objects.filter(group=None, division=None)
+    setup_matches = Match.objects.filter(server=None).exclude(is_setup=True)
     tournaments = Tournament.objects.all()
     context = {
         'orphan_matches': orphan_matches,
+        'setup_matches': setup_matches,
         'tournaments': tournaments,
         'form': form,
 

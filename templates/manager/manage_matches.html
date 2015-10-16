@@ -54,6 +54,9 @@
                         {% endfor %}
                     </div><!-- /.tournament-content -->
                 </div>
+            {% for match in setup_matches %}
+                <p>{{ match.home_team }} vs {{ match.away_team }} set to {{ match.map }}. <a href="{% url 'setup_match' id=match.pk %}">Set to setup</a></p>
+            {% endfor %}
             </div>
             <div class="col-lg-4">
                 <div class="box">
