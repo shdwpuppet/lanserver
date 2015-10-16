@@ -18,10 +18,7 @@
                             <b>Status:</b> <span class="pull-right"> {{ tournament.get_status_display }} </span>
                         </li>
                         <li class="list-group-item">
-                            <b>Teams Registered:</b> <span class="pull-right">24</span>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Prize Pool:</b> <span class="pull-right">$15000</span>
+                            <b>Description</b> <span class="pull-right">{{ tournament.description }}</span>
                         </li>
                     </ul>
                     {% if eligible %}
