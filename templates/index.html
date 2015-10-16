@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}
+{% endblock title %}
+{% block primary %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="box box-default">
+            <div class="box-header">
+                <h3 class="box-title">Servers</h3>
+            </div>
+            <div class="box-body">
+                <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <span> <a href="steam://connect/10.0.0.1:27015">MGE Mod</a></span>
+                        </li>
+                        <li class="list-group-item">
+                            <span> <a href="steam://connect/10.0.0.1:27016">SOAP DM #1</a></span>
+                        </li>
+                        <li class="list-group-item">
+                            <span> <a href="steam://connect/10.0.0.1:27017">SOAP DM #2</a></span>
+                        </li>
+                    <li class="list-group-item">
+                            <span> <a href="steam://connect/10.0.0.1:27018">PUG Server 1 (organize in mumble)</a></span>
+                        </li>
+                    <li class="list-group-item">
+                            <span> <a href="steam://connect/10.0.0.1:27019">PUG Server 2 (organize in mumble)</a></span>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="box box-default">
+            <div class="box-header">
+                <h3 class="box-title">Welcome to GXL</h3>
+            </div>
+                <div class="box-body">
+                  <dl>
+                    <dt>Getting Signed Up</dt>
+                    <dd>Getting signed up is easy. Link your steam account by clicking on "Not Logged In" at the top of the page selecting "Log in with Steam".</dd>
+                    <dt>Captains:</dt>
+                    <dd>Team captains should go ahead and make a team, selectable through the same drop down, now with your username and icon. Select "Create Team".</dd>
+                    <dt>Players:</dt>
+                    <dd>Once your captain has created your team, you can join through the team page with the team's password. Though your team can sign up for a tournament with any number of players, placement into groups will be done based on subjective skill level of the players.</dd>
+                    <dt>Signing up:</dt>
+                      <dd>You can sign up for the tournament through the tournament drop down at the top of the page. Navigate to TF2 at GXL and sign up. An admin will have to add you to the groups manually, so you won't see yourself automatically.</dd>
+                      <dt>Pay TheFragile</dt>
+                      <dd>Find him and pay your fee. Once he confirms with the admins that you have payed up, you will be added to a group. Attempts will be made to keep the highest skilled teams in different groups so that the best teams make it into the elimination bracket.</dd>
+                      <dt>Playing your matches</dt>
+                      <dd>Vetoes will be done by captains on the match setup page, available on your team page. Once vetoes have completed, a server will be automatically assigned. An admin has to change the map, if this is taking too long, don't hesitate to contact Dr.Shdwpuppet on steam or mumble.</dd>
+                      <dt>Reporting Score</dt>
+                      <dd>Score reporting will be done on the same setup page and is available as soon as you get a server assigned. Either team can report the score. Once every team has reported their score in your group, the next round can start.</dd>
+                      <dt>Reporting problems</dt>
+                      <dd>If you have any problems, please either flag down TheFragile or contact Dr.Shdwpuppet on mumble or steam. Every effort has been made to provide a stable platform for LAN, but this is beta software and problems may arise.</dd>
+                  </dl>
+                </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="box box-default">
+            <div class="box-header">
+                <h3 class="box-title">Servers</h3>
+            </div>
+            <div class="box-body">
+                <ul class="list-group list-group-unbordered">
+                    {% for match in active_matches %}
+                        <li class="list-group-item">
+                            <span> <a href="{% url 'match_detail' match_pk=match.pk %}">{{ match.home_team }} vs {{ match.away_team }}{% if match.map %}on {{ match.map }}{% endif %}</a></span>
+                        </li>
+                {% endfor %}
+                    </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
