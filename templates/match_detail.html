@@ -49,7 +49,7 @@
         <div class="col-md-4">
             <div class="box no-padding box-default">
                 <div class="box-header text-center">
-                    {% if match.result %}<h3 class="box-title">{{ match.result.winner_rf }} - {{ match.result.loser_rf }} for {{ match.result.winner.name }}</h3>{% endif %}{% if match.server %}{% if request.user.player_set.all.0.team == match.home_team or request.user.player_set.all.0.team == match.away_team %}<h3><a href=steam://connect/{{ match.server.ip }}:{{ match.server.port }}/gxlmatch">Connect To Server</a></h3>{% endif %}{% endif %}
+                    {% if match.result %}<h3 class="box-title">{{ match.result.winner_rf }} - {{ match.result.loser_rf }} for {{ match.result.winner.name }}</h3>{% endif %}{% if match.server and not match.result%}{% if request.user.player_set.all.0.team == match.home_team or request.user.player_set.all.0.team == match.away_team %}<h3><a href=steam://connect/{{ match.server.ip }}:{{ match.server.port }}/gxlmatch">Connect To Server</a></h3>{% endif %}{% endif %}
                 </div>
                 <div class="box-body">
                     <div class="text-center">
