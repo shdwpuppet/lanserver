@@ -113,7 +113,7 @@
                                                         <ul class="dropdown-menu" role="menu">
                                                             <li><a class = "delete" href="{% url 'manager.views.TournamentDelete' pk=tournament.pk %}" class="text-red">Delete</a></li>
                                                             <li><a href="{% url 'drop_all_teams_from_group' pk=group.pk %}" class="text-red">Remove All Teams</a></li>
-                                                            {% if group.current_round < group.max_round %}<li><a href="{% url 'divgroup_tournament' pk=tournament.pk %}" class="text-green">Start Group/Move Group to Next Round</a></li>{% endif %}
+                                                            {% if group.current_round < group.max_round %}<li><a href="{% url 'start_round_group' pk=tournament.pk %}" class="text-green">Start Group/Move Group to Next Round</a></li>{% endif %}
                                                             <li class="divider"></li>
                                                             <li><a href="{% url 'set_status' pk=tournament.pk status=1 %}">Set Rosters Open</a></li>
                                                             <li><a href="{% url 'set_status' pk=tournament.pk status=2 %}">Set Rosters Locked</a></li>
