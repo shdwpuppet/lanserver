@@ -70,14 +70,12 @@
                                                                     <th style="width: 10px">#</th>
                                                                     <th>Team Name</th>
                                                                     <th>Record</th>
-                                                                    <th style="width: 40px">Label</th>
                                                                 </tr>
                                                                 {% for rank in group.rank_set.all|sort_by:'rank' %}
                                                                     <tr>
                                                                         <td>{{ rank.rank }}.</td>
                                                                         <td>{{rank.team.name}}</td>
                                                                         <td>{% for record in group.record_set.all %}{% if record.team == rank.team %}{{ record.win }}-{{ record.loss }}{% endif %}{% endfor %}</td>
-                                                                        <td><span class="badge bg-red">55%</span></td>
                                                                     </tr>
                                                                 {% endfor %}
 
@@ -102,14 +100,12 @@
                                                                     <th style="width: 10px">#</th>
                                                                     <th>Team Name</th>
                                                                     <th>Record</th>
-                                                                    <th style="width: 40px">Label</th>
                                                                 </tr>
                                                                 {% for rank in group.rank_set.all|sort_by:'rank' %}
                                                                     <tr>
                                                                         <td>{{ rank.rank }}.</td>
                                                                         <td>{{rank.team.name}}</td>
                                                                         <td>{% for record in group.record_set.all %}{% if record.team == rank.team %}{{ record.win }}-{{ record.loss }}{% endif %}{% endfor %}</td>
-                                                                        <td><span class="badge bg-red">55%</span></td>
                                                                     </tr>
                                                                 {% endfor %}
 
