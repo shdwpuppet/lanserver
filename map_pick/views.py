@@ -56,6 +56,7 @@ def mappick(request, pk):
     map_pick = get_object_or_404(MapPick, pk=pk)
     maps = list()
     current = map_pick.current()
+    bo5_order = 'team1_ban,team1_ban,team1_pick,team2_pick,team1_pick,team2_pick,default_pick,done_done'
 
     if map_pick.current()[0] == 'default':
         map_pick.last_pick()
@@ -87,16 +88,14 @@ def mappick(request, pk):
     first_team = map_pick.current()[0] == 'team1'
 
     if request.method == 'POST':
-        print('got to post')
         if 'map_pk' in request.POST:
-            print('got to map_pk' + request.POST['map_pk'])
-            print(first_team)
             if current[1] == 'pick':
-                print('making a pick')
                 map_pick.pick(request.POST['map_pk'], first_team)
             elif current[1] == 'ban':
-                print('making a ban')
                 map_pick.ban(request.POST['map_pk'], first_team)
+        elif 'bo5' in request.POST:
+            map_pick.order = bo5_order
+            map_pick.save()
         return redirect('map_pick', pk=map_pick.pk)
 
     if map_pick.current()[0] == 'done':
@@ -114,4 +113,9 @@ def mappick(request, pk):
 
         pick_line = team_turn + ' is ' + phase + '.'
 
-    return render(request, 'map_picker.html', {'maps': maps, 'mappick': map_pick, 'pickline': pick_line, 'phase': phase})
+    offer_b05 = False
+    if list(map_pick.map_pool.all()) == map_pick.maps_left() and map_pick.order != bo5_order:
+        print('is new')
+        offer_b05 = True
+
+    return render(request, 'map_picker.html', {'maps': maps, 'mappick': map_pick, 'pickline': pick_line, 'phase': phase, 'offer_bo5':offer_b05})

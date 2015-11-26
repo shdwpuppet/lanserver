@@ -42,7 +42,6 @@ class MapPick(models.Model):
 
     def current(self):
         order = self.order.split(',')
-        print(self.stage)
         return order[self.stage].split('_')  # returns a list [team, phase]
 
     def map_banned(self, map_pk):

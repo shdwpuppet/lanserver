@@ -9,6 +9,13 @@
 
     </p>
     <div class="text-center">
+                    {% if offer_bo5 %}
+            <form action="{% url 'map_pick' pk=mappick.pk%}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="bo5" value="{{ map.pk }}">
+                        <button class="btn btn-warning btn-block btn-flat" style="white-space: inherit ! important;">Make BO5 (Must be done before any picks/bans)
+                    {% endif %}
+            </form>
     {% for map in maps %}
         {% if map.status == 0 %}
             <form action="{% url 'map_pick' pk=mappick.pk%}" method="post">
