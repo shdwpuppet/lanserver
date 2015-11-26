@@ -1,0 +1,25 @@
+{% extends 'base_map_pick.html' %}
+{% block primary %}
+    <p class="login-box-msg">Start a new map pick</p>
+    <p class="login-box-msg">Team 1 always goes first. Order is Ban, Ban, Pick, Pick, Ban, Ban</p>
+    <p class="login-box-msg">Last map remaining is the tiebreaker map</p>
+    <form action="{% url 'map_pick_index' %}" method="post">
+    {% for field in form%}
+        {% csrf_token %}
+        <div class="form-group">
+        {{ field }}
+        </div>
+        {% endfor %}
+        <div class="row">
+            <div class="col-xs-8"></div>
+            <div class="col-xs-4">
+                <button type="submit" class="btn btn-primary btn-block btn-flat">Start Map Pick</button>
+            </div><!-- /.col -->
+        </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+<script>$(".map_select").select2({
+    placeholder: 'Choose Maps'
+});</script>
+{% endblock %}

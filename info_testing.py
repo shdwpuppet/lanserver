@@ -1,6 +1,6 @@
 import valve.source.a2s
 
-SERVER_ADDRESS = ('74.91.114.144', 27015)
+SERVER_ADDRESS = ('10.0.0.62', 27018)
 
 server = valve.source.a2s.ServerQuerier(SERVER_ADDRESS)
 info = server.get_info()

@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^profile/', 'core.views.self_profile', name='profile'),
     url(r'^profile/(?P<profile_id>[0-9]+)/$', 'core.views.profile', name='other profile'),
     url(r'^match/', include('matches.urls')),
+    url(r'^map_pick/', include('map_pick.urls'))
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

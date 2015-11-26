@@ -1,5 +1,5 @@
 from .models import Team
-from django.forms import ModelForm, Textarea, TextInput
+from django.forms import ModelForm, Textarea, TextInput, SelectMultiple
 
 
 class TeamForm(ModelForm):
@@ -10,6 +10,5 @@ class TeamForm(ModelForm):
         widgets = {
             'name': TextInput(attrs={'class': 'form-control'}),
             'description': Textarea(attrs={'class': "form-control", 'rows': "3"}),
-            'join_pass': TextInput(attrs={'class': 'form-control'}),
-            'website': TextInput(attrs={'class': 'form-control'}),
+            'map_pool': SelectMultiple(attrs={'class': 'form-control'}),
         }

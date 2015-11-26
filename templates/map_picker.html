@@ -1,0 +1,35 @@
+{% extends 'base_map_pick.html' %}
+{% block primary %}
+    <p class="login-box-msg">
+        {% if pickline %}
+            {{ pickline }}
+        {% elif done %}
+            {{ done }}
+        {% endif %}
+
+    </p>
+    <div class="text-center">
+    {% for map in maps %}
+        {% if map.status == 0 %}
+            <form action="{% url 'map_pick' pk=mappick.pk%}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="map_pk" value="{{ map.pk }}">
+            <button class="btn btn-default btn-block btn-flat" style="white-space: inherit ! important;">
+                {% if phase == 'picking' %}Pick {% else %} Ban {% endif %}
+                {{ map.map }}
+            </button>
+            </form>
+        {% elif map.status == 1 %}
+        <button class="btn btn-success disabled btn-block btn-flat" style="white-space: inherit ! important;">{{ map.map }} picked by {{ map.by }}
+        </button>
+        {% elif map.status == 2 %}
+            <button class="btn btn-danger disabled btn-block btn-flat" style="white-space: inherit ! important;">{{ map.map }} banned by {{ map.by }}
+        </button>
+        {% endif %}
+        {% endfor %}
+        <p> The current pick ID is <b>{{ mappick.pk }}</b>. The NodeCG operator needs that.</p>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}
