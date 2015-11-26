@@ -3,7 +3,44 @@ from django.core.urlresolvers import reverse
 from django.views.generic import CreateView
 from .forms import MapPickForm
 from .models import MapPick
-import random
+from django.http import JsonResponse
+
+
+def api(request, pk):
+    map_pick = get_object_or_404(MapPick, pk=pk)
+
+    blue_picks = []
+    blue_bans = []
+    red_picks = []
+    red_bans = []
+    default_picks = []
+    default_bans = []
+
+    for map in map_pick.map_pool.all():
+        if map_pick.map_banned(map.pk):
+            if map_pick.map_banned_by(map.pk) == map_pick.team1:
+                blue_bans.append(map.name)
+            elif map_pick.map_banned_by(map.pk) == map_pick.team2:
+                red_bans.append(map.name)
+            else:
+                default_bans.append(map.name)
+        elif map_pick.map_picked(map.pk):
+            if map_pick.map_picked_by(map.pk) == map_pick.team1:
+                blue_picks.append(map.name)
+            elif map_pick.map_picked_by(map.pk) == map_pick.team2:
+                red_picks.append(map.name)
+            else:
+                default_picks.append(map.name)
+
+    to_json = {
+        'blue_picks': blue_picks,
+        'blue_bans': blue_bans,
+        'red_picks': red_picks,
+        'red_bans': red_bans,
+        'default_picks': default_picks,
+        'default_bans': default_bans,
+    }
+    return JsonResponse(to_json, safe=False)
 
 
 class MapPickCreate(CreateView):
@@ -76,6 +113,5 @@ def mappick(request, pk):
             phase = 'banning'
 
         pick_line = team_turn + ' is ' + phase + '.'
-
 
     return render(request, 'map_picker.html', {'maps': maps, 'mappick': map_pick, 'pickline': pick_line, 'phase': phase})
